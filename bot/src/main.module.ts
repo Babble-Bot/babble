@@ -117,7 +117,8 @@ function messageHander(msg, channel) {
             sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! " + msg.data.sender.username , channel);
             break;
         case msgType == "follow":
-            sendMsg("Thanks for the Follow !! Welcome " + user.username, channel)
+            sendMsg("Thanks for the Follow !! Welcome " + user.username, channel);
+            break;
         case msgType == "gift_item":
             sendMsg("Enjoy your Gift!! " + msg.data.recipient.username, channel);
             break;
