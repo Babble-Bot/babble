@@ -1,0 +1,24 @@
+{
+  "name": "babble",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/src/main.module.js",
+  "scripts": {
+    "prestart": "tsc",
+    "start": "node .",
+    "debug": "node .",
+    "pretest": "tsc",
+    "test": "mocha dist/test/*.spec.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.0",
+    "pubnub": "^4.27.3"
+  },
+  "devDependencies": {
+    "chai": "^4.1.1",
+    "@types/chai": "^4.0.4",
+    "mocha": "^3.5.0",
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^8.0.26"
+  }
+}
