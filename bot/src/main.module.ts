@@ -114,7 +114,7 @@ function messageHander(msg, channel) {
             sendMsg("Hello " + user.username + " thanks for joining the channel ", channel);
             break;
         case msgType == "donation":
-            sendMsg("Thank you for the" + msg.data.tfuel + " :tfuel: !! " + msg.data.sender.username , channel);
+            sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! " + msg.data.sender.username , channel);
             break;
         case msgType == "follow":
             sendMsg("Thanks for the Follow !! Welcome " + user.username, channel)
@@ -158,7 +158,7 @@ function checkViewHooks(msg, usr, channel) {
     switch (true) {
         case isNormalInteger(msg) && channelConfig.numberGame:
             if(parseInt(msg) == channelConfig.number){
-                sendMsg("Congrats !! " + usr.username + "Your the winner :flex:", channel);
+                sendMsg("Congrats !! " + usr.username + " Your the winner :flex:", channel);
                 channelConfig.number = 0;
                 channelConfig.numberGame = false;
                 //TODO: auto send gift able item ?
