@@ -27,8 +27,8 @@ const listener = {
         var publishTime = p.timestamp; // Publish timetoken
         var timetoken = p.timetoken; // Current timetoken
         var uuid = p.uuid; // UUIDs of users who are connected with the channel
-        if (action != "interval") {
-            console.log("presence",p);
+        if (action != "interval" || action != "leave") {
+            //console.log("presence",p);
         }
     },
     signal: function (s) {
@@ -106,6 +106,8 @@ function init(body) {
 }
 
 function startPubNub() {
+    pubnub.removeListener(listener);
+    pubnub.unsubscribe({ channels: config.subscribers });
     pubnub.subscribe({
         channels: config.subscribers,
         withPresence: true
