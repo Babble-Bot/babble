@@ -122,16 +122,16 @@ function messageHandler(msg, channel) {
 
     switch (true) {
         case msgType == "hello_message":
-            sendMsg("Hello " + user.username + " thanks for joining the channel ", channel);
+            sendMsg("Hello @" + user.username + " thanks for joining the channel ", channel);
             break;
         case msgType == "donation":
-            sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! " + msg.data.sender.username , channel);
+            sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username , channel);
             break;
         case msgType == "follow":
-            sendMsg("Thanks for the Follow !! Welcome " + user.username, channel);
+            sendMsg("Thanks for the Follow !! Welcome @" + user.username, channel);
             break;
         case msgType == "gift_item":
-            sendMsg("Enjoy your Gift!! " + msg.data.recipient.username, channel);
+            sendMsg("Enjoy your Gift!! @" + msg.data.recipient.username, channel);
             break;
         case msgType == "chat_message_" + channel:
             if (msgText.startsWith(config.prefix)) {
@@ -165,17 +165,21 @@ function runCmd(msg, channel) {
 }
 
 function checkViewHooks(msg, usr, channel) {
+  msg = msg.toLowerCase().substr(1).split(" ");
     let channelConfig = config.channels[channel];
     msg.toLowerCase();
     switch (true) {
         case isNormalInteger(msg) && channelConfig.numberGame:
             if(parseInt(msg) == channelConfig.number){
-                sendMsg("Congrats !! " + usr.username + " Your the winner :flex:", channel);
+                sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
                 channelConfig.number = 0;
                 channelConfig.numberGame = false;
                 //TODO: auto send gift able item ?
-            }
+            }//TODO: add logic to stop spaming
             break;
+         case msg[0] == "8":
+           play8Ball(usr, channel);
+           break;
     }
 }
 
@@ -185,6 +189,9 @@ function startNumberGame(msg, channel){
     if(msg[1]){
         maxInt = msg[1];
     }
+    if(maxInt < 25){
+      maxInt = 25;
+    }
     // if(msg[2]){
     //     channelConfig.limit = msg[2];
     // }
@@ -193,6 +200,34 @@ function startNumberGame(msg, channel){
         channelConfig.number = Math.floor(Math.random() * maxInt) + 1;
         sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt ,channel);
     }
+}
+
+function play8Ball(usr, channel) {
+  let responses = [
+   'It is certain',
+   'It is decidedly so',
+   'Without a doubt',
+   'Yes definitely',
+   'You may rely on it',
+   'As I see it, yes',
+   'Most likely',
+   'Outlook good',
+   'yes',
+   'Signs point to yes',
+   'Reply hazy try again',
+   'Ask again later',
+   'Better not tell you now',
+   'Cannot predict now',
+   'Concentrate and ask again',
+   'Do not count on it',
+   'My reply is no',
+   'My sources say no',
+   'Outlook not so good',
+   'Very doubtful',
+   ];
+   let choice = responses[Math.floor(Math.random() * responses.length)];
+   let msg = "@" + usr.username + " " + choice;
+   sendMsg(msg, channel);
 }
 
 function isNormalInteger(str) {
