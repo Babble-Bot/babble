@@ -11,6 +11,7 @@ export default class Games{
         if(msg[1] == "kill"){
             channelConfig.numberGame = false;
             channelConfig.number = '';
+            this.thetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
         }else{
             if (msg[1]) {
                 maxInt = msg[1];

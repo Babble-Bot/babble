@@ -176,6 +176,10 @@ export default class babble {
             case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
                 this.games.startNumberGame(msg, channel);
                 break;
+            case msg[0] == "support":
+                this.thetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
+            break;
+
             // case msg[0] == "mod" && msg[1].startsWith("@"): NOTE: currently not supported
             //     break;
         }
