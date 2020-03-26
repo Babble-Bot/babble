@@ -2,9 +2,10 @@
   "name": "babble",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/src/main.module.js",
+  "main": "dist/src/main.js",
   "scripts": {
     "prestart": "tsc",
+    "predebug": "tsc",
     "start": "node .",
     "debug": "node .",
     "pretest": "tsc",
