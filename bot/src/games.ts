@@ -6,23 +6,25 @@ export default class Games{
         this.config = config;
     }
     public startNumberGame(msg, channel) {
-        let channelConfig = this.config.channels[channel];
-        let maxInt = Math.floor(Math.random() * 100) + 1;
-        if(msg[1] < 25){
-            msg[1] = 25;
+        let channelConfig = config.channels[channel];
+        let maxInt = Math.floor(Math.random() * 100) + 1; //Default of 100
+        if(msg[1] == "kill"){
+            channelConfig.numberGame = false;
+            channelConfig.number = '';
+        }else{
+            if (msg[1]) {
+                maxInt = msg[1];
+            }
+            if (maxInt < 25) {
+                maxInt = 25;
+            }
+            if (!channelConfig.numberGame) {
+                channelConfig.numberGame = true;
+                channelConfig.number = Math.floor(Math.random() * maxInt) + 1;
+                this.thetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
+            }
         }
-        if (msg[1]) {
-            maxInt = msg[1];
-        }
-        // if(msg[2]){
-        //     channelConfig.limit = msg[2];
-        // }
-        if (!channelConfig.numberGame) {
-            channelConfig.numberGame = true;
-            channelConfig.number = Math.floor(Math.random() * maxInt) + 1;
-            console.log(channelConfig);
-            this.thetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
-        }
+
     }
 
     public play8Ball(usr, channel) {

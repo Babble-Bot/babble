@@ -7,8 +7,8 @@ import ThetaApi from './theta.api';
 import Games from './games';
 
 
-export default class babble{
-    constructor(private thetaApi: ThetaApi, private games: Games){
+export default class babble {
+    constructor(private thetaApi: ThetaApi, private games: Games) {
         setInterval(this.getInstalls, 5000);
     }
     pubnub: any = new PubNub({ subscribeKey: config.subscribeKey });
@@ -130,7 +130,7 @@ export default class babble{
 
         switch (true) {
             case msgType == "hello_message":
-                this.thetaApi.sendMsg("Hello @" + user.username + " thanks for joining the channel ", channel);
+                this.thetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
                 break;
             case msgType == "donation":
                 this.thetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
@@ -141,6 +141,15 @@ export default class babble{
             case msgType == "gift_item":
                 this.thetaApi.sendMsg("Enjoy your Gift!! @" + msg.data.recipient.username, channel);
                 break;
+            case msgType == "subscribe":
+                this.thetaApi.sendMsg("Thanks for the Sub and Support! @" + user.username, channel);
+                break;
+            case msgType == "gift_subscribe":
+                this.thetaApi.sendMsg("Thank you @" + msg.data.sender.username + "for gifting @" + msg.data.recipient.username + msg.data.subscribe, channel);
+                break;
+            case msgType == "xp":
+                this.thetaApi.sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
+                break;
             case msgType == "chat_message_" + channel:
                 if (msgText.startsWith(config.prefix)) {
                     this.runCmd(msgText, channel);
@@ -150,7 +159,6 @@ export default class babble{
                 if (user.id == channel) {
                     if (msgText.startsWith(config.prefix)) {
                         this.runCmd(msgText, channel);
-                        //checkViewHooks(msgText, user, channel);
                     }
                 } else {
                     this.checkViewHooks(msgText, user, channel);
