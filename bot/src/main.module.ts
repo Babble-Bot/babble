@@ -241,28 +241,28 @@ function startNumberGame(msg, channel) {
 function numGameManager(msg, usr, channel) {
     let guess = parseInt(msg);
     let ngChannelConfig = config.activeNumberGames[channel];
-    let ngPlayer = ngChannelConfig.players[usr.username];
-    let tries = []
-    console.log(ngPlayer);
-    if (!ngPlayer.lastGuess) {
-        ngPlayer["lastGuess"] = guess;
-    }
+    // let ngPlayer = ngChannelConfig.players[usr.username];
+    // let tries = []
+    // console.log(ngPlayer);
+    // if (!ngPlayer.lastGuess) {
+    //     ngPlayer["lastGuess"] = guess;
+    // }
 
-    if (guess == (ngPlayer.lastGuess + 1) || guess == (ngPlayer.lastGuess - 1)) {
-        sendMsg("@" + usr.username + " Sorry but you guess's can not be consecutive ie. 1 2 3 or 3 2 1", channel);
-    } else {
-        ngPlayer.lastGuess = guess;
-        tries.push(guess);
-        ngPlayer["tries"] = tries;
-    }
+    // if (guess == (ngPlayer.lastGuess + 1) || guess == (ngPlayer.lastGuess - 1)) {
+    //     sendMsg("@" + usr.username + " Sorry but you guess's can not be consecutive ie. 1 2 3 or 3 2 1", channel);
+    // } else {
+    //     ngPlayer.lastGuess = guess;
+    //     tries.push(guess);
+    //     ngPlayer["tries"] = tries;
+    // }
     if (guess == ngChannelConfig.number) {
         sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
         ngChannelConfig.number = 0;
         ngChannelConfig.numberGame = false;
-        ngChannelConfig.players = {
-            guesses: [],
-            lastGuess: "",
-        };
+        // ngChannelConfig.players = {
+        //     guesses: [],
+        //     lastGuess: "",
+        // };
         //TODO: auto send gift able item ?
         //TODO: set up limmit trys
     }
