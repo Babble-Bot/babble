@@ -90,6 +90,9 @@ function getInstalls() {
 
 function init(body) {
     let data = JSON.parse(body);
+    let numberGame = false;
+    let number = 0;
+    let players = {};
     config.subscribers.splice(0, config.subscribers.length);
     data.body.forEach(function (channel) {
         config.channels[channel.user_id] = {
@@ -97,11 +100,21 @@ function init(body) {
             userId: channel.user_id,
             accessToken: channel.access_token,
         };
+        if(config.activeNumberGames[channel.user_id]){
+            numberGame = config.activeNumberGames[channel.user_id].numberGame;
+            number = config.activeNumberGames[channel.user_id].number;
+            players = config.activeNumberGames[channel.user_id].players
+        }
+        config.activeNumberGames[channel.user_id] = {
+            numberGame: numberGame,
+            number: number,
+            players: players
+        };
     });
     for (let channel in config.channels) {
         config.subscribers.push("chat." + channel);
     }
-    //console.log(config);//ONLY for debuging
+    console.log(config.activeNumberGames);//ONLY for debuging
     startPubNub();
 }
 
@@ -144,14 +157,14 @@ function messageHandler(msg, channel) {
             sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
             break;
         case msgType == "chat_message_" + channel:
-            if (msgText.startsWith(channelConfig.prefix)) {
+            if (msgText.startsWith(config.prefix)) {
                 runCmd(msgText, channel);
                 //runCmd(msgText, user, channel);
             }
             break;
         case msgType == "chat_message":
             if (user.id == channel) {
-                if (msgText.startsWith(channelConfig.prefix)) {
+                if (msgText.startsWith(config.prefix)) {
                     runCmd(msgText, channel);
                     //runCmd(msgText, user, channel);
                 }
@@ -201,23 +214,25 @@ function startNumberGame(msg, channel) {
     let ngChannelConfig = config.activeNumberGames[channel];
     let maxInt = Math.floor(Math.random() * 100) + 1; //Default of 100
     if (msg[1] == "kill") {
-        channelConfig.numberGame = false;
+        ngChannelConfig.numberGame = false;
         ngChannelConfig = {number: 0, players: {}};
         sendMsg("The Number Game has been cancelled :burnttoast:", channel);
     } else {
-        console.log(msg[1])
         if (msg[1]) {
             maxInt = msg[1];
         }
         if (maxInt < 25) {
             maxInt = 25;
         }
-        console.log(maxInt);
-        if (!channelConfig.numberGame) {
-            channelConfig.numberGame = true;
+        if (!ngChannelConfig.numberGame) {
+            //console.log(ngChannelConfig);
+            ngChannelConfig.numberGame = true;
             ngChannelConfig.number = Math.floor(Math.random() * maxInt) + 1;
             sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
-            console.log("winnering number", ngChannelConfig.number);
+            //console.log("winnering number", ngChannelConfig.number);
+            //console.log(ngChannelConfig);
+        }else{
+            sendMsg("Number Game already active", channel);
         }
     }
 
@@ -225,7 +240,6 @@ function startNumberGame(msg, channel) {
 
 function numGameManager(msg, usr, channel) {
     let guess = parseInt(msg);
-    let channelConfig = config.channels[channel];
     let ngChannelConfig = config.activeNumberGames[channel];
     let ngPlayer = ngChannelConfig.players[usr.id];
     ngPlayer.guesses.push(guess);
@@ -241,9 +255,10 @@ function numGameManager(msg, usr, channel) {
     if (guess == ngChannelConfig.number) {
         sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
         ngChannelConfig.number = 0;
-        channelConfig.numberGame = false;
+        ngChannelConfig.numberGame = false;
         ngChannelConfig.players = {};
         //TODO: auto send gift able item ?
+        //TODO: set up limmit trys
     }
 }
 
