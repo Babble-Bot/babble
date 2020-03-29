@@ -93,6 +93,8 @@ function init(body) {
     let numberGame = false;
     let number = 0;
     let players = {};
+    let guesses = [];
+    let lastGuess = "";
     config.subscribers.splice(0, config.subscribers.length);
     data.body.forEach(function (channel) {
         config.channels[channel.user_id] = {
@@ -242,8 +244,8 @@ function numGameManager(msg, usr, channel) {
     let guess = parseInt(msg);
     let ngChannelConfig = config.activeNumberGames[channel];
     let ngPlayer = ngChannelConfig.players[usr.id];
-    ngPlayer.guesses.push(guess);
-    if (!ngPlayer.lastGuess) {
+    ngPlayer["guesses"].push(guess);
+    if (!ngPlayer["lastGuess"]) {
         ngPlayer.lastGuess = guess;
     }
 
@@ -256,7 +258,10 @@ function numGameManager(msg, usr, channel) {
         sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
         ngChannelConfig.number = 0;
         ngChannelConfig.numberGame = false;
-        ngChannelConfig.players = {};
+        ngChannelConfig.players = {
+            guesses: [],
+            lastGuess: "",
+        };
         //TODO: auto send gift able item ?
         //TODO: set up limmit trys
     }
@@ -328,18 +333,18 @@ function sendMsg(msg, channel) {
         });
 }
 
-function getUserNameFromId(userId) {
-    console.log(userId);
-    let username;
-    fetch('https://api.theta.tv/v1/user/' + userId)
-        .then(res => res.json())
-        .then(json => function (json) {
-            console.log(json);
-            username = json.body.username;
-        });
-    console.log(username);
-    return username;
+// function getUserNameFromId(userId) {
+//     console.log(userId);
+//     let username;
+//     fetch('https://api.theta.tv/v1/user/' + userId)
+//         .then(res => res.json())
+//         .then(json => function (json) {
+//             console.log(json);
+//             username = json.body.username;
+//         });
+//     console.log(username);
+//     return username;
 
-}
+// }
 
 setInterval(getInstalls, 5000);
