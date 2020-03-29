@@ -93,8 +93,6 @@ function init(body) {
     let numberGame = false;
     let number = 0;
     let players = {};
-    let guesses = [];
-    let lastGuess = "";
     config.subscribers.splice(0, config.subscribers.length);
     data.body.forEach(function (channel) {
         config.channels[channel.user_id] = {
@@ -105,7 +103,7 @@ function init(body) {
         if(config.activeNumberGames[channel.user_id]){
             numberGame = config.activeNumberGames[channel.user_id].numberGame;
             number = config.activeNumberGames[channel.user_id].number;
-            players = config.activeNumberGames[channel.user_id].players
+            players = config.activeNumberGames[channel.user_id].players;
         }
         config.activeNumberGames[channel.user_id] = {
             numberGame: numberGame,
@@ -243,16 +241,19 @@ function startNumberGame(msg, channel) {
 function numGameManager(msg, usr, channel) {
     let guess = parseInt(msg);
     let ngChannelConfig = config.activeNumberGames[channel];
-    let ngPlayer = ngChannelConfig.players[usr.id];
-    ngPlayer["guesses"].push(guess);
-    if (!ngPlayer["lastGuess"]) {
-        ngPlayer.lastGuess = guess;
+    let ngPlayer = ngChannelConfig.players[usr.username];
+    let tries = []
+    console.log(ngPlayer);
+    if (!ngPlayer.lastGuess) {
+        ngPlayer["lastGuess"] = guess;
     }
 
-    if (guess == ngPlayer.lastGuess + 1 || guess == ngPlayer.lastGuess - 1) {
+    if (guess == (ngPlayer.lastGuess + 1) || guess == (ngPlayer.lastGuess - 1)) {
         sendMsg("@" + usr.username + " Sorry but you guess's can not be consecutive ie. 1 2 3 or 3 2 1", channel);
     } else {
         ngPlayer.lastGuess = guess;
+        tries.push(guess);
+        ngPlayer["tries"] = tries;
     }
     if (guess == ngChannelConfig.number) {
         sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
