@@ -1,16 +1,24 @@
+"use strict";
+
+import fetch from 'node-fetch';
+import * as appConfig from './config.json';
 export default class ThetaApi{
-    config: any;
-    constructor(config: any){
-        this.config = config
+    constructor(){}
+    
+    static getInstalls(): any {
+        let url = 'https://api.theta.tv/v1/oauth_application/' + appConfig.clientId + '/oauth_install/list?client_id=' + appConfig.clientId + '&client_secret=' + appConfig.clientSecret;
+        fetch(url).then(res => res.text()).then(async function(body){
+             return await body;
+        });
     }
-    public sendMsg(msg, channel) {
+
+    static sendMsg(msg, channel) {
         let body = {
             "type": "chat_message",
             "message": msg
         };
-        let result;
-        let channelConfig = this.config.channels[channel];
-        let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId + "/channel_action?client_id=" + this.config.clientId + "&client_secret=" + this.config.clientSecret;
+        let channelConfig = BabbleLib.channels[channel];
+        let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId + "/channel_action?client_id=" + appConfig.clientId + "&client_secret=" + appConfig.clientSecret;
         fetch(url, {
             method: "POST",
             body: JSON.stringify(body),
@@ -19,20 +27,17 @@ export default class ThetaApi{
                 "Content-Type": "application/json"
             },
         })
-            .then(function (res) {
-                if (res.ok) {
-                    console.log(res.statusText + " msssage sent!");
-                } else {
-                    console.log('Request failed.  Returned status of ' + res.status);
-                }
-                return res.blob();
-            })
-            .then(function (blob) {
-                result = blob;
-            });
+        .then(function (res) {
+            if (res.ok) {
+                console.log(res.statusText + " msssage sent!");
+            } else {
+                console.log('Request failed.  Returned status of ' + res.status);
+            }
+        })
+        .then(body => body);
     }
 
-    public getUserNameFromId(userId) {
+    static getUserNameFromId(userId): string {
         console.log(userId);
         let username;
         fetch('https://api.theta.tv/v1/user/' + userId)

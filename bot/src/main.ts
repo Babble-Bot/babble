@@ -1,17 +1,15 @@
 "use strict";
-
 import PubNub = require('pubnub');
-import fetch from 'node-fetch';
-import * as config from './config.json';
+import * as appConfig from './config.json';
 import ThetaApi from './theta.api';
+import BabbleAip from './babble.api';
 import Games from './games';
 
+export var subscribers: BabbleLib.Subscribers;
+export var channels: BabbleLib.Channels;
 
-export default class babble {
-    constructor(private thetaApi: ThetaApi, private games: Games) {
-        setInterval(this.getInstalls, 5000);
-    }
-    pubnub: any = new PubNub({ subscribeKey: config.subscribeKey });
+class Babble{
+    pubnub: any = new PubNub({ subscribeKey: appConfig.subscribeKey });
     listener: any = {
         message: function (m) {
             // handle messages
@@ -22,7 +20,7 @@ export default class babble {
             let msg = m.message; // The Payload
             let publisher = m.publisher; //The Publisher
             channelName = channelName.replace('chat.', '');
-            messageHandler(msg, channelName);
+            this.messageHandler(msg, channelName);
         },
         presence: function (p) {
             // handle presence
@@ -88,36 +86,40 @@ export default class babble {
             var subscribedChannels = s.subscribedChannels; //All the current subscribed channels, of type array.
         }
     };
-
-    initurl: string = 'https://api.theta.tv/v1/oauth_application/' + config.clientId + '/oauth_install/list?client_id=' + config.clientId + '&client_secret=' + config.clientSecret;
-
-    getInstalls() {
-        fetch(this.initurl).then(res => res.text()).then(body => this.init(body));
+    
+    constructor() {
+        setInterval(this.init, 10000);
     }
 
-    init(body) {
-        let data = JSON.parse(body);
-        config.subscribers.splice(0, config.subscribers.length);
-        data.body.forEach(function (channel) {
-            config.channels[channel.user_id] = {
-                clientId: channel.client_id,
-                userId: channel.user_id,
-                accessToken: channel.access_token,
+    async init() {
+        let data = await ThetaApi.getInstalls();
+        //subscribers.clear();
+        // if(!subscribers){
+        //     BabbleLib.subscribers.splice(0, BabbleLib.subscribers.length);
+        // }
+        data.forEach(function (item) {
+            let channel: Channel = {
+                clientId: item.client_id ,
+                userId: item.user_id,
+                accessToken: item.access_token,
+                prefix: BabbleAip.getStreamerPrefix()
             };
+            channels[item.user_id] = channel;
         });
-        for (let channel in config.channels) {
-            config.subscribers.push("chat." + channel);
+        for (let channel in channels) {
+            subscribers.push("chat." + channel);
         }
-        //console.log(config);//ONLY for debuging
-        globalConfig(config);
+
+        console.log("subscribers",subscribers);
+        console.log("channels",channels)
         this.startPubNub();
     }
 
     startPubNub() {
         this.pubnub.removeListener(this.listener);
-        this.pubnub.unsubscribe({ channels: config.subscribers });
+        this.pubnub.unsubscribe({ channels: BabbleLib.subscribers });
         this.pubnub.subscribe({
-            channels: config.subscribers,
+            channels: BabbleLib.subscribers,
             withPresence: true
         });
         this.pubnub.addListener(this.listener);
@@ -127,37 +129,38 @@ export default class babble {
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
+        let channelConfig = BabbleLib.channels[channel];
 
         switch (true) {
             case msgType == "hello_message":
-                this.thetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
+                ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
                 break;
             case msgType == "donation":
-                this.thetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
+                ThetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
                 break;
             case msgType == "follow":
-                this.thetaApi.sendMsg("Thanks for the Follow !! Welcome @" + user.username, channel);
+                ThetaApi.sendMsg("Thanks for the Follow !! Welcome @" + user.username, channel);
                 break;
             case msgType == "gift_item":
-                this.thetaApi.sendMsg("Enjoy your Gift!! @" + msg.data.recipient.username, channel);
+                ThetaApi.sendMsg("Enjoy your Gift!! @" + msg.data.recipient.username, channel);
                 break;
             case msgType == "subscribe":
-                this.thetaApi.sendMsg("Thanks for the Sub and Support! @" + user.username, channel);
+                ThetaApi.sendMsg("Thanks for the Sub and Support! @" + user.username, channel);
                 break;
             case msgType == "gift_subscribe":
-                this.thetaApi.sendMsg("Thank you @" + msg.data.sender.username + "for gifting @" + msg.data.recipient.username + msg.data.subscribe, channel);
+                ThetaApi.sendMsg("Thank you @" + msg.data.sender.username + "for gifting @" + msg.data.recipient.username + msg.data.subscribe, channel);
                 break;
             case msgType == "xp":
-                this.thetaApi.sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
+                ThetaApi.sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
                 break;
             case msgType == "chat_message_" + channel:
-                if (msgText.startsWith(config.prefix)) {
+                if (msgText.startsWith(channelConfig.prefix)) {
                     this.runCmd(msgText, channel);
                 }
                 break;
             case msgType == "chat_message":
                 if (user.id == channel) {
-                    if (msgText.startsWith(config.prefix)) {
+                    if (msgText.startsWith(channelConfig.prefix)) {
                         this.runCmd(msgText, channel);
                     }
                 } else {
@@ -171,13 +174,13 @@ export default class babble {
         msg = msg.toLowerCase().substr(1).split(" ");
         switch (true) {
             case msg[0] == "hello" || msg[0] == "hi":
-                this.thetaApi.sendMsg("hello", channel);
+                ThetaApi.sendMsg("hello", channel);
                 break;
             case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
-                this.games.startNumberGame(msg, channel);
+                Games.startNumberGame(msg, channel);
                 break;
             case msg[0] == "support":
-                this.thetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
+                ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
             break;
 
             // case msg[0] == "mod" && msg[1].startsWith("@"): NOTE: currently not supported
@@ -187,19 +190,14 @@ export default class babble {
 
     checkViewHooks(msg, usr, channel) {
         msg = msg.toLowerCase().substr(1).split(" ");
-        let channelConfig = config.channels[channel];
+        let channelConfig = BabbleLib.channels[channel];
         msg.toLowerCase();
         switch (true) {
             case this.isNormalInteger(msg) && channelConfig.numberGame:
-                if (parseInt(msg) == channelConfig.number) {
-                    this.thetaApi.sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
-                    channelConfig.number = 0;
-                    channelConfig.numberGame = false;
-                    //TODO: auto send gift able item ?
-                }//TODO: add logic to stop spaming
+                Games.numGameManager(msg, usr, channel);
                 break;
             case msg[0] == "8":
-                this.games.play8Ball(usr, channel);
+                Games.play8Ball(usr, channel);
                 break;
         }
     }
@@ -215,3 +213,5 @@ export default class babble {
     }
 
 }
+
+export default new Babble();

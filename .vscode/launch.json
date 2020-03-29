@@ -8,7 +8,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Program",
-            "program": "${workspaceFolder}/bot/src/main.module.ts",
+            "program": "${workspaceFolder}/bot/src/main.ts",
             "preLaunchTask": "build bot",
             "outFiles": ["${workspaceFolder}/bot/dist/**/*.js"]
         }

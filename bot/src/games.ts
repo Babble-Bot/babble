@@ -1,18 +1,20 @@
+"use strict";
+
 import ThetaApi from './theta.api';
 
-export default class Games{
-    config: any;
-    constructor(private thetaApi: ThetaApi, config: any){
-        this.config = config;
-    }
-    public startNumberGame(msg, channel) {
-        let channelConfig = config.channels[channel];
+export default class Games {
+    /**
+     * Number Game Init
+     */
+    static startNumberGame(msg, channel) {
+        let channelConfig = BabbleLib.channels[channel];
+        let ngChannelConfig = BabbleLib.activeNumberGames[channel];
         let maxInt = Math.floor(Math.random() * 100) + 1; //Default of 100
-        if(msg[1] == "kill"){
+        if (msg[1] == "kill") {
             channelConfig.numberGame = false;
-            channelConfig.number = '';
-            this.thetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
-        }else{
+            ngChannelConfig = {number: 0, players: {}};
+            ThetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
+        } else {
             if (msg[1]) {
                 maxInt = msg[1];
             }
@@ -21,14 +23,45 @@ export default class Games{
             }
             if (!channelConfig.numberGame) {
                 channelConfig.numberGame = true;
-                channelConfig.number = Math.floor(Math.random() * maxInt) + 1;
-                this.thetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
+                ngChannelConfig.number = Math.floor(Math.random() * maxInt) + 1;
+                ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
             }
         }
 
     }
 
-    public play8Ball(usr, channel) {
+    /**
+     * Number Game Manager
+     * 
+     */
+    static numGameManager(msg, usr, channel) {
+        let guess = parseInt(msg);
+        let channelConfig = BabbleLib.channels[channel];
+        let ngChannelConfig = BabbleLib.activeNumberGames[channel];
+        let ngPlayer = ngChannelConfig[usr.id];
+
+        if(!ngPlayer.lastGuess){
+            ngPlayer.lastGuess = guess;
+        }
+
+        if(guess == ngPlayer.lastGuess + 1 || guess == ngPlayer.lastGuess - 1){
+            ThetaApi.sendMsg("@" + usr.username + " Sorry but you guess's can not be consecutive ie. 1 2 3 or 3 2 1", channel);
+        }else{
+            ngPlayer.lastGuess = guess;
+        }
+
+        if (guess == ngChannelConfig.number) {
+            ThetaApi.sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
+            ngChannelConfig.number = 0;
+            channelConfig.numberGame = false;
+            //TODO: auto send gift able item ?
+        }
+    }
+
+    /**
+     * Magic 8 Ball
+     */
+    static play8Ball(usr, channel) {
         let responses = [
             'It is certain',
             'It is decidedly so',
@@ -54,6 +87,6 @@ export default class Games{
         let choice = responses[Math.floor(Math.random() * responses.length)];
         let msg = "@" + usr.username + " " + choice;
         console.log(msg);
-        this.thetaApi.sendMsg(msg, channel);
+        ThetaApi.sendMsg(msg, channel);
     }
 }
