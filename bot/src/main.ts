@@ -5,8 +5,6 @@ import ThetaApi from './theta.api';
 import BabbleAip from './babble.api';
 import Games from './games';
 
-export var subscribers: BabbleLib.Subscribers;
-export var channels: BabbleLib.Channels;
 
 class Babble{
     pubnub: any = new PubNub({ subscribeKey: appConfig.subscribeKey });
@@ -86,50 +84,60 @@ class Babble{
             var subscribedChannels = s.subscribedChannels; //All the current subscribed channels, of type array.
         }
     };
-    
+
     constructor() {
+        globalThis.channels = {};
+        globalThis.activeNumberGames = {};
+        globalThis.subscribers = [];
         setInterval(this.init, 10000);
     }
 
-    async init() {
-        let data = await ThetaApi.getInstalls();
-        //subscribers.clear();
-        // if(!subscribers){
-        //     BabbleLib.subscribers.splice(0, BabbleLib.subscribers.length);
-        // }
-        data.forEach(function (item) {
-            let channel: Channel = {
+    private init() {
+        let data:Installs = ThetaApi.getInstalls();
+        let numberGame = false;
+        let number = 0;
+        let players = {};
+        globalThis.subscribers.splice(0, globalThis.subscribers.length);
+        for(let item in data) {
+            let channel = {
                 clientId: item.client_id ,
                 userId: item.user_id,
                 accessToken: item.access_token,
                 prefix: BabbleAip.getStreamerPrefix()
             };
-            channels[item.user_id] = channel;
+            globalThis.channels[item.user_id] = channel;
+            if(globalThis.activeNumberGames[item.user_id]){
+                number = globalThis.globalThis.activeNumberGames[item.user_id].number;
+                numberGame = globalThis.globalThis.activeNumberGames[item.user_id].numberGame;
+                players = globalThis.globalThis.activeNumberGames[item.user_id].players;
+            }
+            globalThis.activeNumberGames[item.user_id] = {
+                number: number,
+                numberGame: numberGame,
+                players: players
+            }
         });
         for (let channel in channels) {
-            subscribers.push("chat." + channel);
+            globalThis.subscribers.push("chat." + channel);
         }
-
-        console.log("subscribers",subscribers);
-        console.log("channels",channels)
         this.startPubNub();
     }
 
-    startPubNub() {
+    private startPubNub() {
         this.pubnub.removeListener(this.listener);
-        this.pubnub.unsubscribe({ channels: BabbleLib.subscribers });
+        this.pubnub.unsubscribe({ channels: globalThis.subscribers });
         this.pubnub.subscribe({
-            channels: BabbleLib.subscribers,
+            channels: globalThis.subscribers,
             withPresence: true
         });
         this.pubnub.addListener(this.listener);
     }
 
-    messageHandler(msg, channel) {
+    private messageHandler(msg, channel) {
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
-        let channelConfig = BabbleLib.channels[channel];
+        let channelConfig = globalThis.channels[channel];
 
         switch (true) {
             case msgType == "hello_message":
@@ -170,7 +178,7 @@ class Babble{
         }
     }
 
-    runCmd(msg, channel) {
+    private runCmd(msg, channel) {
         msg = msg.toLowerCase().substr(1).split(" ");
         switch (true) {
             case msg[0] == "hello" || msg[0] == "hi":
@@ -188,15 +196,14 @@ class Babble{
         }
     }
 
-    checkViewHooks(msg, usr, channel) {
+    private checkViewHooks(msg, usr, channel) {
+        let ngChannelConfig = globalThis.activeNumberGames[channel];
+        if (this.isNormalInteger(msg) && ngChannelConfig.numberGame) {
+            Games.numGameManager(msg, usr, channel);
+        }
         msg = msg.toLowerCase().substr(1).split(" ");
-        let channelConfig = BabbleLib.channels[channel];
-        msg.toLowerCase();
         switch (true) {
-            case this.isNormalInteger(msg) && channelConfig.numberGame:
-                Games.numGameManager(msg, usr, channel);
-                break;
-            case msg[0] == "8":
+            case msg[0] == "magic8":
                 Games.play8Ball(usr, channel);
                 break;
         }
