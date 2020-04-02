@@ -20,9 +20,9 @@ export default class Games {
                 maxInt = 25;
             }
             if (!ngChannelConfig.numberGame) {
+                ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
                 ngChannelConfig.numberGame = true;
                 ngChannelConfig.number = Math.floor(Math.random() * maxInt) + 1;
-                ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
             }else{
                 ThetaApi.sendMsg("Number Game already active", channel);
             }
@@ -49,7 +49,7 @@ export default class Games {
         // }
 
         if (guess == ngChannelConfig.number) {
-            ThetaApi.sendMsg("Congrats !! @" + usr.username + " Your the winner :flex:", channel);
+            ThetaApi.sendMsg("Congrats !! @" + usr.username + " Your the winner with: " + ngChannelConfig.number + ":flex:", channel);
             ngChannelConfig.number = 0;
             ngChannelConfig.numberGame = false;
             //TODO: setup anti spam
