@@ -8,17 +8,10 @@ import Games from './games';
 
 class Babble{
     pubnub: any = new PubNub({ subscribeKey: appConfig.subscribeKey });
-    listener: any = {
-        message: function (m) {
-            // handle messages
-            console.log(m);
-            let channelName = m.channel; // The channel for which the message belongs
-            let channelGroup = m.subscription; // The channel group or wildcard subscription match (if exists)
-            let pubTT = m.timetoken; // Publish timetoken
-            let msg = m.message; // The Payload
-            let publisher = m.publisher; //The Publisher
-            channelName = channelName.replace('chat.', '');
-            this.messageHandler(msg, channelName);
+    listener:any = {
+        message: (m) => {
+            //console.log(m);
+            this.messageHandler(m);
         },
         presence: function (p) {
             // handle presence
@@ -89,41 +82,50 @@ class Babble{
         globalThis.channels = {};
         globalThis.activeNumberGames = {};
         globalThis.subscribers = [];
-        setInterval(this.init, 10000);
+        setInterval(async() => {
+            let hasInstalls = await this.checkInstalsLoop();
+            this.init(hasInstalls);
+        }, 10000);
     }
 
-    private init() {
-        let data:Installs = ThetaApi.getInstalls();
-        let numberGame = false;
-        let number = 0;
-        let players = {};
-        globalThis.subscribers.splice(0, globalThis.subscribers.length);
-        for(let item in data) {
-            let channel = {
-                clientId: item.client_id ,
-                userId: item.user_id,
-                accessToken: item.access_token,
-                prefix: BabbleAip.getStreamerPrefix()
-            };
-            globalThis.channels[item.user_id] = channel;
-            if(globalThis.activeNumberGames[item.user_id]){
-                number = globalThis.globalThis.activeNumberGames[item.user_id].number;
-                numberGame = globalThis.globalThis.activeNumberGames[item.user_id].numberGame;
-                players = globalThis.globalThis.activeNumberGames[item.user_id].players;
+    async checkInstalsLoop(){
+        await ThetaApi.getInstalls(
+            data => {
+                data.forEach((item) => {
+                    let status = ((globalThis.channels[item.user_id]) ? globalThis.channels[item.user_id].showStatus : true);
+                    let numberGame = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id].numberGame : false);
+                    let number = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id].number : 0);
+                    let players = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id].players : {});
+                    let channel:Channel = {
+                        clientId: item.client_id ,
+                        userId: item.user_id,
+                        accessToken: item.access_token,
+                        prefix: BabbleAip.getStreamerPrefix(),
+                        showStatus: status
+                    };
+                    globalThis.channels[item.user_id] = channel;
+                    globalThis.activeNumberGames[item.user_id] = {
+                        number: number,
+                        numberGame: numberGame,
+                        players: players
+                    }
+                });
             }
-            globalThis.activeNumberGames[item.user_id] = {
-                number: number,
-                numberGame: numberGame,
-                players: players
+        );
+        return true
+    }
+
+    init(hasInstalls: boolean) {
+        if(hasInstalls){
+            globalThis.subscribers.splice(0, globalThis.subscribers.length);
+            for (let channel in globalThis.channels) {
+                globalThis.subscribers.push("chat." + channel);
             }
-        });
-        for (let channel in channels) {
-            globalThis.subscribers.push("chat." + channel);
+            this.startPubNub();
         }
-        this.startPubNub();
     }
 
-    private startPubNub() {
+    startPubNub() {
         this.pubnub.removeListener(this.listener);
         this.pubnub.unsubscribe({ channels: globalThis.subscribers });
         this.pubnub.subscribe({
@@ -133,12 +135,47 @@ class Babble{
         this.pubnub.addListener(this.listener);
     }
 
-    private messageHandler(msg, channel) {
+    messageHandler(msgObject) {
+        let channelId = msgObject.channel.replace('chat.', ''); // The channel for which the message belongs
+        let pubTT = msgObject.timetoken; // Publish timetoken
+        let msg = msgObject.message; // The Payload
+        let publisher = msgObject.publisher; //The Publisher
+        let msgText = msg.data.text;
+        let msgType = msg.type;
+        let user = msg.data.user;
+        let channelConfig = globalThis.channels[channelId];
+
+        switch (true) {
+            case msgType == "system_chat_message":
+                if(msgText.includes("has raided the stream")){
+                    ThetaApi.sendMsg("RAID HYPE!! :nominal: :nominal: @" + user.username + "went crazy :crazy: Spam Raid in chat everyone!!", channelId);
+                }
+                break;
+            case msgType == "chat_message_" + channelId:
+                if (msgText.startsWith(channelConfig.prefix)) {
+                    this.runCmd(msgText, channelId);
+                }
+                break;
+            case msgType == "chat_message":
+                if (user.id == channelId) {
+                    if (msgText.startsWith(channelConfig.prefix)) {
+                        this.runCmd(msgText, channelId);
+                    }
+                } else {
+                    this.checkViewHooks(msgText, user, channelId);
+                }
+                break;
+            default:
+                this.statusHandler(msg, channelId);
+                break;
+        }
+    }
+
+    statusHandler(msg, channel){
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
         let channelConfig = globalThis.channels[channel];
-
         switch (true) {
             case msgType == "hello_message":
                 ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
@@ -161,24 +198,10 @@ class Babble{
             case msgType == "xp":
                 ThetaApi.sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
                 break;
-            case msgType == "chat_message_" + channel:
-                if (msgText.startsWith(channelConfig.prefix)) {
-                    this.runCmd(msgText, channel);
-                }
-                break;
-            case msgType == "chat_message":
-                if (user.id == channel) {
-                    if (msgText.startsWith(channelConfig.prefix)) {
-                        this.runCmd(msgText, channel);
-                    }
-                } else {
-                    this.checkViewHooks(msgText, user, channel);
-                }
-                break;
         }
     }
 
-    private runCmd(msg, channel) {
+    runCmd(msg, channel) {
         msg = msg.toLowerCase().substr(1).split(" ");
         switch (true) {
             case msg[0] == "hello" || msg[0] == "hi":
@@ -196,7 +219,7 @@ class Babble{
         }
     }
 
-    private checkViewHooks(msg, usr, channel) {
+    checkViewHooks(msg, usr, channel) {
         let ngChannelConfig = globalThis.activeNumberGames[channel];
         if (this.isNormalInteger(msg) && ngChannelConfig.numberGame) {
             Games.numGameManager(msg, usr, channel);

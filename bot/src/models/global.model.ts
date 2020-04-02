@@ -10,7 +10,7 @@ interface Channel {
     userId: string;
     accessToken: string;
     prefix: string;
-    numberGame?: boolean;
+    showStatus?: boolean;
 }
 
 interface NumberGame {
