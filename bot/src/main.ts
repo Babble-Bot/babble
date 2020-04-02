@@ -147,6 +147,8 @@ class Babble{
 
         switch (true) {
             case msgType == "system_chat_message":
+                console.log("system message", msgObject);
+                console.log("is raid", msgText.includes("has raided the stream"));
                 if(msgText.includes("has raided the stream")){
                     ThetaApi.sendMsg("RAID HYPE!! :nominal: :nominal: @" + user.username + "went crazy :crazy: Spam Raid in chat everyone!!", channelId);
                 }
@@ -224,9 +226,10 @@ class Babble{
         if (this.isNormalInteger(msg) && ngChannelConfig.numberGame) {
             Games.numGameManager(msg, usr, channel);
         }
-        msg = msg.toLowerCase().substr(1).split(" ");
+        msg = msg.toLowerCase().split(" ");
         switch (true) {
             case msg[0] == "magic8":
+                console.log("8ball");
                 Games.play8Ball(usr, channel);
                 break;
         }
