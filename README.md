@@ -19,10 +19,8 @@ in order to use this bot with theta you must make a config file. `/bot/config.js
 {
     "subscribeKey": "<subscribeKey>",
     "clientId": "<clientId>",
-    "clientSecret": "<clientId>",
-    "prefix": "<your chosen prefex>",
-    "channels": {
-        "subscribers":[]
-    }
+    "clientSecret": "<clientId>"
 }
 ```
+
+Trello Bord: https://trello.com/b/ouoA0dci/babble-10-dev
