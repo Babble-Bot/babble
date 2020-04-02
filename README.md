@@ -23,4 +23,5 @@ in order to use this bot with theta you must make a config file. `/bot/config.js
 }
 ```
 
-Trello Bord: https://trello.com/b/ouoA0dci/babble-10-dev
+Trello: https://trello.com/b/ouoA0dci/babble-10-dev
+Discord: https://discord.gg/
