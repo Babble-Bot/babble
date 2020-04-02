@@ -2,8 +2,8 @@
   "name": "babble",
   "version": "0.1.0",
   "description": "",
-  "main": "dist/src/main.js",
-  "types": "./types/main.d.ts",
+  "main": "./dist/src/main.js",
+  "types": "./node_modules/@types/*.d.ts",
   "scripts": {
     "prestart": "tsc",
     "predebug": "tsc",
