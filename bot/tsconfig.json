@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
         "resolveJsonModule" : true,
+        "incremental": true,
         "module": "commonjs",
-        "target": "es5",
+        "target": "es6",
         "outDir": "dist",
+        "sourceMap": true,
         "rootDirs":[
             "src",
             "test"
@@ -11,5 +13,6 @@
     },
     "exclude": [
         "node_modules"
-    ]
+    ],
+    "typeRoots": ["src/types/*.d.ts" ]
 }

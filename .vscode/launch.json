@@ -7,11 +7,10 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Bot",
-            "cwd": "${workspaceFolder}/bot",
-            "runtimeExecutable": "npm",
-            "runtimeArgs": ["run-script", "debug"],
-            "port": 9229
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/bot/src/main.ts",
+            "preLaunchTask": "build bot",
+            "outFiles": ["${workspaceFolder}/bot/dist/**/*.js"]
         }
     ]
 }
