@@ -5,9 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Go API",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${fileDirname}",
+            "showLog": true
+        },
+        {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Bot",
             "program": "${workspaceFolder}/bot/src/main.ts",
             "preLaunchTask": "build bot",
             "outFiles": ["${workspaceFolder}/bot/dist/**/*.js"]

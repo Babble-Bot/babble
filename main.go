@@ -14,7 +14,7 @@ type Response struct {
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-
+	var code string
 	// Serve the frontend
 	router.Use(static.Serve("/", static.LocalFile("./app/build/web", true)))
 
