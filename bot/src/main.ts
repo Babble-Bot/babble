@@ -1,18 +1,15 @@
 "use strict";
 import PubNub = require('pubnub');
 import * as appConfig from './config.json';
-import ThetaApi from './theta.api';
-import BabbleAip from './babble.api';
+import ThetaApi from './utils/theta.api';
+import BabbleAip from './utils/babble.api';
 import Games from './games';
 
 
-class Babble{
+class Babble {
     pubnub: any = new PubNub({ subscribeKey: appConfig.subscribeKey });
-    listener:any = {
-        message: (m) => {
-            //console.log(m);
-            this.messageHandler(m);
-        },
+    listener: any = {
+        message: (m) => { this.messageHandler(m); },
         presence: function (p) {
             // handle presence
             var action = p.action; // Can be join, leave, state-change or timeout
@@ -82,41 +79,44 @@ class Babble{
         globalThis.channels = {};
         globalThis.activeNumberGames = {};
         globalThis.subscribers = [];
-        setInterval(async() => {
+        setInterval(async () => {
             let hasInstalls = await this.checkInstalsLoop();
             this.init(hasInstalls);
         }, 10000);
     }
 
-    async checkInstalsLoop(){
+    async checkInstalsLoop() {
         await ThetaApi.getInstalls(
             data => {
                 data.forEach((item) => {
                     let status = ((globalThis.channels[item.user_id]) ? globalThis.channels[item.user_id].showStatus : true);
-                    let numberGame = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id].numberGame : false);
-                    let number = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id].number : 0);
-                    let players = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id].players : {});
-                    let channel:Channel = {
-                        clientId: item.client_id ,
+                    let activeNumberGame = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id] : {
+                        active: false,
+                        winningNumber: 0,
+                        players: {},
+                        lastGame: {
+                            maxInt: 0
+                        }
+                    });
+                    let channel: Channel = {
+                        clientId: item.client_id,
                         userId: item.user_id,
                         accessToken: item.access_token,
                         prefix: BabbleAip.getStreamerPrefix(),
                         showStatus: status
                     };
                     globalThis.channels[item.user_id] = channel;
-                    globalThis.activeNumberGames[item.user_id] = {
-                        number: number,
-                        numberGame: numberGame,
-                        players: players
-                    }
+                    globalThis.activeNumberGames[item.user_id] = activeNumberGame;
                 });
             }
         );
+        // console.log(globalThis.activeNumberGames["usrxhgay62cewzpiymn"]);
+        // console.log(globalThis.activeNumberGames["usrxhgay62cewzpiymn"].players);
         return true
     }
 
     init(hasInstalls: boolean) {
-        if(hasInstalls){
+        if (hasInstalls) {
             globalThis.subscribers.splice(0, globalThis.subscribers.length);
             for (let channel in globalThis.channels) {
                 globalThis.subscribers.push("chat." + channel);
@@ -149,7 +149,7 @@ class Babble{
             case msgType == "system_chat_message":
                 console.log("system message", msgObject);
                 console.log("is raid", msgText.includes("has raided the stream"));
-                if(msgText.includes("has raided the stream")){
+                if (msgText.includes("has raided the stream")) {
                     ThetaApi.sendMsg("RAID HYPE!! :nominal: :nominal: @" + user.username + "went crazy :crazy: Spam Raid in chat everyone!!", channelId);
                 }
                 break;
@@ -163,6 +163,7 @@ class Babble{
                     if (msgText.startsWith(channelConfig.prefix)) {
                         this.runCmd(msgText, channelId);
                     }
+                    this.checkViewHooks(msgText, user, channelId);
                 } else {
                     this.checkViewHooks(msgText, user, channelId);
                 }
@@ -173,7 +174,7 @@ class Babble{
         }
     }
 
-    statusHandler(msg, channel){
+    statusHandler(msg, channel) {
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
@@ -197,7 +198,7 @@ class Babble{
             case msgType == "gift_subscribe":
                 ThetaApi.sendMsg("Thank you @" + msg.data.sender.username + "for gifting @" + msg.data.recipient.username + msg.data.subscribe, channel);
                 break;
-            case msgType == "xp":
+            case msgType == "level_up":
                 ThetaApi.sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
                 break;
         }
@@ -212,9 +213,12 @@ class Babble{
             case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
                 Games.startNumberGame(msg, channel);
                 break;
+            case msg[0] == "uptime":
+                ThetaApi.getUpTime(channel);
+                break;
             case msg[0] == "support":
                 ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
-            break;
+                break;
 
             // case msg[0] == "mod" && msg[1].startsWith("@"): NOTE: currently not supported
             //     break;
@@ -223,7 +227,7 @@ class Babble{
 
     checkViewHooks(msg, usr, channel) {
         let ngChannelConfig = globalThis.activeNumberGames[channel];
-        if (this.isNormalInteger(msg) && ngChannelConfig.numberGame) {
+        if (this.isNormalInteger(msg) && ngChannelConfig.active) {
             Games.numGameManager(msg, usr, channel);
         }
         msg = msg.toLowerCase().split(" ");

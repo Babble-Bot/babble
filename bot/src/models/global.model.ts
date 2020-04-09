@@ -1,8 +1,8 @@
 
-interface Player{
+interface Player {
     userId: string,
-    lastGuess: string,
-    tres: string[]
+    lastTry: number,
+    tres: number[];
 }
 
 interface Channel {
@@ -14,17 +14,10 @@ interface Channel {
 }
 
 interface NumberGame {
-    numberGame: boolean;
-    number: number,
-    players: object
-}
-
-interface Channels {
-    [index: string]: Channel
-}
-
-interface ActiveNumberGames{
-    [index: string]: NumberGame
+    active: boolean;
+    winningNumber: number,
+    players: Players,
+    lastGame: LastGame;
 }
 
 interface Install {
@@ -33,8 +26,11 @@ interface Install {
     access_token: string;
 }
 
-interface Installs extends Array<Install>{
-}
+interface LastGame { maxInt: number; }
+interface Players { [index: string]: Player }
+interface Channels { [index: string]: Channel; }
+interface ActiveNumberGames { [index: string]: NumberGame; }
+interface Installs extends Array<Install> { }
 
 var defaultPrefix: string = "!";
 var subscribers: string[] = [];
