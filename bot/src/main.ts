@@ -158,7 +158,7 @@ class Babble {
                 break;
             case msgType.includes("chat_message"):
                 if (ngChannelConfig.active && onlyNumRegx.test(msgText)) {
-                    Games.numGameManager(msg, user, channelId);
+                    Games.numGameManager(msgText, user, channelId);
                 }
                 if (msgText.startsWith(channelConfig.prefix)) {
                     if (user.type == "owner") {
