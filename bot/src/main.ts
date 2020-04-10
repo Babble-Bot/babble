@@ -3,6 +3,7 @@ import PubNub = require('pubnub');
 import * as appConfig from './config.json';
 import ThetaApi from './utils/theta.api';
 import BabbleAip from './utils/babble.api';
+import BabbleCmd from './utils/commands';
 import Games from './games';
 
 
@@ -144,6 +145,8 @@ class Babble {
         let msgType = msg.type;
         let user = msg.data.user;
         let channelConfig = globalThis.channels[channelId];
+        let ngChannelConfig = globalThis.activeNumberGames[channelId];
+        let onlyNumRegx = /^\d+$/;
 
         switch (true) {
             case msgType == "system_chat_message":
@@ -153,101 +156,30 @@ class Babble {
                     ThetaApi.sendMsg("RAID HYPE!! :nominal: :nominal: @" + user.username + "went crazy :crazy: Spam Raid in chat everyone!!", channelId);
                 }
                 break;
-            case msgType == "chat_message_" + channelId:
-                if (msgText.startsWith(channelConfig.prefix)) {
-                    this.runCmd(msgText, channelId);
+            case msgType.includes("chat_message"):
+                if (ngChannelConfig.active && msgText.test(onlyNumRegx)) {
+                    Games.numGameManager(msg, user, channelId);
                 }
-                break;
-            case msgType == "chat_message":
-                if (user.id == channelId) {
-                    if (msgText.startsWith(channelConfig.prefix)) {
-                        this.runCmd(msgText, channelId);
+                if (msgText.startsWith(channelConfig.prefix)) {
+                    if (user.type == "owner") {
+                        BabbleCmd.runCmd(msgText, user, channelId);
+                    } else if (user.type == "moderator") {
+                        BabbleCmd.modCmd(msgText, user, channelId);
+                    } else {
+                        ThetaApi.sendMsg("Sorry but you do not have Permission to do that", channelId);
                     }
-                    this.checkViewHooks(msgText, user, channelId);
-                } else {
-                    this.checkViewHooks(msgText, user, channelId);
+                }else{
+                    if(msgText.startsWith(globalThis.defaultPrefix)) {
+                        BabbleCmd.checkViewHooks(msgText, user, channelId);
+                    }
                 }
                 break;
             default:
-                this.statusHandler(msg, channelId);
+                BabbleCmd.statusHandler(msg, channelId);
                 break;
         }
     }
 
-    statusHandler(msg, channel) {
-        let msgText = msg.data.text;
-        let msgType = msg.type;
-        let user = msg.data.user;
-        let channelConfig = globalThis.channels[channel];
-        switch (true) {
-            case msgType == "hello_message":
-                ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
-                break;
-            case msgType == "donation":
-                ThetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
-                break;
-            case msgType == "follow":
-                ThetaApi.sendMsg("Thanks for the Follow !! Welcome @" + user.username, channel);
-                break;
-            case msgType == "gift_item":
-                ThetaApi.sendMsg("Enjoy your Gift!! @" + msg.data.recipient.username, channel);
-                break;
-            case msgType == "subscribe":
-                ThetaApi.sendMsg("Thanks for the Sub and Support! @" + user.username, channel);
-                break;
-            case msgType == "gift_subscribe":
-                ThetaApi.sendMsg("Thank you @" + msg.data.sender.username + "for gifting @" + msg.data.recipient.username + msg.data.subscribe, channel);
-                break;
-            case msgType == "level_up":
-                ThetaApi.sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
-                break;
-        }
-    }
-
-    runCmd(msg, channel) {
-        msg = msg.toLowerCase().substr(1).split(" ");
-        switch (true) {
-            case msg[0] == "hello" || msg[0] == "hi":
-                ThetaApi.sendMsg("hello", channel);
-                break;
-            case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
-                Games.startNumberGame(msg, channel);
-                break;
-            case msg[0] == "uptime":
-                ThetaApi.getUpTime(channel);
-                break;
-            case msg[0] == "support":
-                ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
-                break;
-
-            // case msg[0] == "mod" && msg[1].startsWith("@"): NOTE: currently not supported
-            //     break;
-        }
-    }
-
-    checkViewHooks(msg, usr, channel) {
-        let ngChannelConfig = globalThis.activeNumberGames[channel];
-        if (this.isNormalInteger(msg) && ngChannelConfig.active) {
-            Games.numGameManager(msg, usr, channel);
-        }
-        msg = msg.toLowerCase().split(" ");
-        switch (true) {
-            case msg[0] == "magic8":
-                console.log("8ball");
-                Games.play8Ball(usr, channel);
-                break;
-        }
-    }
-
-    isNormalInteger(str) {
-        str = str.trim();
-        if (!str) {
-            return false;
-        }
-        str = str.replace(/^0+/, "") || "0";
-        var n = Math.floor(Number(str));
-        return n !== Infinity && String(n) === str && n >= 0;
-    }
 
 }
 
