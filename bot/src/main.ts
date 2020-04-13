@@ -9,6 +9,24 @@ import Games from './games';
 
 class Babble {
     pubnub: any = new PubNub({ subscribeKey: appConfig.subscribeKey });
+    alertDefault = {
+        all: true,
+        hello: true,
+        donation: true,
+        fallow: true,
+        gift: true,
+        sub: true,
+        giftedsub: true,
+        level: true,
+    };
+    ngDefault = {
+        active: false,
+        winningNumber: 0,
+        players: {},
+        lastGame: {
+            maxInt: 0
+        }
+    };
     listener: any = {
         message: (m) => { this.messageHandler(m); },
         presence: function (p) {
@@ -90,21 +108,14 @@ class Babble {
         await ThetaApi.getInstalls(
             data => {
                 data.forEach((item) => {
-                    let status = ((globalThis.channels[item.user_id]) ? globalThis.channels[item.user_id].showStatus : true);
-                    let activeNumberGame = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id] : {
-                        active: false,
-                        winningNumber: 0,
-                        players: {},
-                        lastGame: {
-                            maxInt: 0
-                        }
-                    });
+                    let alertConfig = ((globalThis.channels[item.user_id]) ? globalThis.channels[item.user_id].alertConfig : this.alertDefault);
+                    let activeNumberGame = ((globalThis.activeNumberGames[item.user_id]) ? globalThis.activeNumberGames[item.user_id] : this.ngDefault);
                     let channel: Channel = {
                         clientId: item.client_id,
                         userId: item.user_id,
                         accessToken: item.access_token,
                         prefix: BabbleAip.getStreamerPrefix(),
-                        showStatus: status
+                        alertConfig: alertConfig
                     };
                     globalThis.channels[item.user_id] = channel;
                     globalThis.activeNumberGames[item.user_id] = activeNumberGame;
@@ -174,7 +185,9 @@ class Babble {
                 }
                 break;
             default:
-                BabbleCmd.statusHandler(msg, channelId);
+                if(channelConfig.alertConfig.all){
+                    BabbleCmd.statusHandler(msg, channelId);
+                }
                 break;
         }
     }

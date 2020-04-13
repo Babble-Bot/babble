@@ -10,7 +10,7 @@ interface Channel {
     userId: string;
     accessToken: string;
     prefix: string;
-    showStatus?: boolean;
+    alertConfig: AlertConfig;
 }
 
 interface NumberGame {
@@ -24,6 +24,17 @@ interface Install {
     client_id: string;
     user_id: string;
     access_token: string;
+}
+
+interface AlertConfig{
+    all: boolean;
+    hello: boolean;
+    donation: boolean;
+    fallow: boolean;
+    gift: boolean;
+    sub: boolean;
+    giftedsub: boolean;
+    level: boolean;
 }
 
 interface LastGame { maxInt: number; }
