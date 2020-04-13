@@ -15,7 +15,13 @@ export default class BabbleCMD {
             case msg[0] == "uptime":
                 ThetaApi.getUpTime(channel);
                 break;
-            case msg[0] == "support":
+            case msg[0] == "streamkey":
+                ThetaApi.sendMsg("Want a Theta StreamKey; This is how: https://community.theta.tv/stream-keys/", channel);
+                break;
+            case msg[0] == "patreon":
+                ThetaApi.sendMsg("Feeling Supportive; Love BABBLE; Please be a Great Freind and Visit my PATREON: https://www.patreon.com/babblechatbot?fan_landing=true", channel);
+                break;
+            case msg[0] == "babble" || msg[0] == "support" || msg[0] == "info":
                 ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
                 break;
             case msg[0] == "magic8":
@@ -37,15 +43,18 @@ export default class BabbleCMD {
             case msg[0] == "uptime":
                 ThetaApi.getUpTime(channel);
                 break;
-            case msg[0] == "support":
+            case msg[0] == "streamkey":
+                ThetaApi.sendMsg("Want a Theta StreamKey; This is how: https://community.theta.tv/stream-keys/", channel);
+                break;
+            case msg[0] == "patreon":
+                ThetaApi.sendMsg("Feeling Supportive; Love BABBLE; Please be a Great Freind and Visit my PATREON: https://www.patreon.com/babblechatbot?fan_landing=true", channel);
+                break;
+            case msg[0] == "babble" || msg[0] == "support" || msg[0] == "info":
                 ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
                 break;
             case msg[0] == "magic8":
                 Games.play8Ball(usr, channel);
                 break;
-
-            // case msg[0] == "mod" && msg[1].startsWith("@"): NOTE: currently not supported
-            //     break;
         }
     }
 
@@ -54,6 +63,12 @@ export default class BabbleCMD {
         switch (true) {
             case msg[0] == "magic8":
                 Games.play8Ball(usr, channel);
+                break;
+            case msg[0] == "streamkey":
+                ThetaApi.sendMsg("Want a Theta StreamKey; This is how: https://community.theta.tv/stream-keys/", channel);
+                break;
+            case msg[0] == "patreon":
+                ThetaApi.sendMsg("Feeling Supportive; Love BABBLE; Please be a Great Freind and Visit my PATREON: https://www.patreon.com/babblechatbot?fan_landing=true", channel);
                 break;
         }
     }
