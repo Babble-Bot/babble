@@ -13,7 +13,7 @@ class Babble {
         all: true,
         hello: true,
         donation: true,
-        fallow: true,
+        follow: true,
         gift: true,
         sub: true,
         giftedsub: true,

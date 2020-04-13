@@ -92,7 +92,7 @@ export default class BabbleCMD {
             case (msgType == "donation"  && channelConfig.alertConfig.donation):
                 ThetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
                 break;
-            case (msgType == "follow" && channelConfig.alertConfig.fallow):
+            case (msgType == "follow" && channelConfig.alertConfig.follow):
                 ThetaApi.sendMsg("Thanks for the Follow !! Welcome @" + user.username, channel);
                 break;
             case (msgType == "gift_item" && channelConfig.alertConfig.gift):
@@ -112,7 +112,7 @@ export default class BabbleCMD {
 
     static alertConfigManager(msg, channel) {
         const channelConfig = globalThis.channels[channel];
-        const types = ["all", "hello", "donation", "fallow", "gift", "sub", "giftedsub", "level"];
+        const types = ["all", "hello", "donation", "follow", "gift", "sub", "giftedsub", "level"];
         const type = msg[1];
         const conf = msg[2];
         if(types.indexOf(type) > -1){
@@ -126,7 +126,7 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Sorry but I did not recognize your Config option you can use [on, true, off, false]",channel);
             }
         }else{
-            ThetaApi.sendMsg("Sorry but I did not recognize the Type of alert you would like to change you can use [all, hello, donation, fallow, gift, sub, giftedsub, level]",channel);
+            ThetaApi.sendMsg("Sorry but I did not recognize the Type of alert you would like to change you can use [all, hello, donation, follow, gift, sub, giftedsub, level]",channel);
         }
     }
 }

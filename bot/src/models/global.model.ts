@@ -30,7 +30,7 @@ interface AlertConfig{
     all: boolean;
     hello: boolean;
     donation: boolean;
-    fallow: boolean;
+    follow: boolean;
     gift: boolean;
     sub: boolean;
     giftedsub: boolean;
