@@ -10,41 +10,46 @@ export default class ThetaApi {
         let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId
         const response = await fetch(url);
         const json = await response.json();
-        const initTS = json.body.timestamp;
+        const initTS = parseInt(json.body.start_time);
         const currentTS = Date.now();
         const diff = currentTS - initTS;
         let diffSec = diff / 1000;
         let diffMin = diff / (60 * 1000);
         let diffHour = diff / (60 * 60 * 1000);
         let diffDay = diff / (24 * 60 * 60 * 1000);
+        // console.log("In milliseconds: " + diff + " milliseconds.");
+        // console.log("In seconds: " + diffSec + " seconds.");
+        // console.log("In minutes: " + diffMin + " minutes.");
+        // console.log("In hours: " + diffHour + " hours.");
+        // console.log("In days: " + diffDay + " days.");
         let uptimeMsg = "";
         if (diffDay > 0) {
-            uptimeMsg += diffDay + " days, ";
+            uptimeMsg += Math.floor(diffDay) + " days, ";
         }
         if (diffHour > 0) {
             if (diffDay > 0) {
-                diffHour -= diffDay * 24;
+                diffHour -=  Math.floor(diffDay) * 24;
             }
-            uptimeMsg += diffHour + " hours, ";
+            uptimeMsg += Math.floor(diffHour) + " hours, ";
 
         }
         if (diffMin > 0) {
             if (diffHour > 0) {
-                diffMin -= diffHour * 60;
+                diffMin -= Math.floor(diffHour) * 60;
             }
-            uptimeMsg += diffMin + " minutes, ";
+            uptimeMsg += Math.floor(diffMin) + " minutes, ";
 
         }
         if (diffSec > 0) {
             if (diffMin > 0) {
                 uptimeMsg += " and ";
-                let daysInSeconds = diffDay * 24 * 60 * 60;
-                let hoursInSeconds = diffHour * 60 * 60;
-                let minutesInSeconds = diffMin * 60;
+                let daysInSeconds = Math.floor(diffDay) * 24 * 60 * 60;
+                let hoursInSeconds = Math.floor(diffHour) * 60 * 60;
+                let minutesInSeconds = Math.floor(diffMin) * 60;
 
                 diffSec -= daysInSeconds + hoursInSeconds + minutesInSeconds;
             }
-            uptimeMsg += diffSec + " seconds.";
+            uptimeMsg += Math.floor(diffSec) + " seconds.";
 
         }
         this.sendMsg("your uptime is " + uptimeMsg, channel);
