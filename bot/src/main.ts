@@ -161,8 +161,6 @@ class Babble {
 
         switch (true) {
             case msgType == "system_chat_message":
-                console.log("system message", msgObject);
-                console.log("is raid", msgText.includes("has raided the stream"));
                 if (msgText.includes("has raided the stream")) {
                     ThetaApi.sendMsg("RAID HYPE!! :nominal: :nominal: @" + user.username + "went crazy :crazy: Spam Raid in chat everyone!!", channelId);
                 }

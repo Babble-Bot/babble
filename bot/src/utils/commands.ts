@@ -105,6 +105,7 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Thank you @" + msg.data.sender.username + "for gifting @" + msg.data.recipient.username + msg.data.subscribe + " a Sub", channel);
                 break;
             case (msgType == "level_up" && channelConfig.alertConfig.level):
+                console.log(msg);
                 ThetaApi.sendMsg("Lets GO @" + user.username + "you just reached level" + msg.data.xp + "GG's in chat everyone", channel);
                 break;
         }
