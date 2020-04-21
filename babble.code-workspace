@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "app"
+		},
+		{
+			"path": "bot"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"app": true,
+			"bot": true
+		}
+	}
+}
