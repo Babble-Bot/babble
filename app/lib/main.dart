@@ -6,10 +6,10 @@ import 'pages/dashboad.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
+  String code = Uri.base.queryParameters['code'];
+
   @override
   Widget build(BuildContext context) {
-    String code = Uri.base.queryParameters['code'];
-
     Map<String, WidgetBuilder> routes = {
       '/': (BuildContext context) => MyHomePage(),
       '/dashboard': (BuildContext context) => Dashboard()
@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.lightBlue,
       ),
-      home: MyHomePage(title: 'Babble Bot'),
     );
   }
 }
