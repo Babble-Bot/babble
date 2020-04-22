@@ -71,6 +71,9 @@ export default class BabbleCMD {
             case msg[0] == "magic8":
                 Games.play8Ball(usr, channel);
                 break;
+            case msg[0] == "uptime":
+                ThetaApi.getUpTime(channel);
+                break;
             case msg[0] == "streamkey":
                 ThetaApi.sendMsg("Want a Theta StreamKey; This is how: https://community.theta.tv/stream-keys/", channel);
                 break;
@@ -90,9 +93,7 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
                 break;
             case (msgType == "donation"  && channelConfig.alertConfig.donation):
-		console.log("donation");
                 ThetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
-		console.log("donation message sent!");
                 break;
             case (msgType == "follow" && channelConfig.alertConfig.follow):
                 ThetaApi.sendMsg("Thanks for the Follow !! Welcome @" + user.username, channel);
@@ -109,12 +110,22 @@ export default class BabbleCMD {
             case (msgType == "level_up" && channelConfig.alertConfig.level):
                 ThetaApi.sendMsg("Lets GO @" + user.username + " you just reached level " + user.channel_xp.level + " GG's in chat everyone", channel);
                 break;
+            case (msgType == "quiz" && channelConfig.alertConfig.quiz):
+                ThetaApi.sendMsg('@' + user.username + ' Has started a new Quiz "' + msg.data.quiz.text + '" Good Luck all!', channel);
+                break;
+            case (msgType == "raffle" && channelConfig.alertConfig.raffle):
+                console.log(msg.data.raffle.prizes);
+                ThetaApi.sendMsg('@' + user.username + ' Has started a new Raffle "' + msg.data.raffle.text + '" Good Luck all!', channel);
+                break;
+            case (msgType == "raffle_winner" && channelConfig.alertConfig.rafflewin):
+                ThetaApi.sendMsg("@" + user.username + " congrats on winning " + msg.data.item.name + " GG's in chat everyone", channel);
+                break;
         }
     }
 
     static alertConfigManager(msg, channel) {
         const channelConfig = globalThis.channels[channel];
-        const types = ["all", "hello", "donation", "follow", "gift", "sub", "giftedsub", "level"];
+        const types = ["all", "hello", "donation", "follow", "gift", "sub", "giftedsub", "level", "quiz", "raffle", "rafflewin"];
         const type = msg[1];
         const conf = msg[2];
         if(types.indexOf(type) > -1){

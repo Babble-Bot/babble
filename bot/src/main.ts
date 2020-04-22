@@ -18,6 +18,9 @@ class Babble {
         sub: true,
         giftedsub: true,
         level: true,
+        quiz: false,
+        raffle: false,
+        rafflewin: true
     };
     ngDefault = {
         active: false,
@@ -170,7 +173,7 @@ class Babble {
                     Games.numGameManager(msgText, user, channelId);
                 }
 console.log(msgText);
-                if(msgText.startsWith(globalThis.defaultPrefix) && user.type == "user") {
+                if((msgText.startsWith(globalThis.defaultPrefix) || msgText.startsWith('/')) && user.type == "user") {
                     BabbleCmd.checkViewHooks(msgText, user, channelId);
                 }
                 if (msgText.startsWith(channelConfig.prefix) && user.type != "user") {

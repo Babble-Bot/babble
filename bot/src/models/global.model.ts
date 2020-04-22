@@ -35,6 +35,9 @@ interface AlertConfig{
     sub: boolean;
     giftedsub: boolean;
     level: boolean;
+    quiz: boolean;
+    raffle: boolean;
+    rafflewin: boolean;
 }
 
 interface LastGame { maxInt: number; }
