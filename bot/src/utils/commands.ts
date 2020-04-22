@@ -29,6 +29,8 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
                 break;
             case msg[0] == "magic8":
+                msg[0] = '';
+                ThetaApi.sendMsg("Magic 8 ball: " + msg.toString() + "?",channel);
                 Games.play8Ball(usr, channel);
                 break;
 
@@ -41,9 +43,9 @@ export default class BabbleCMD {
             case msg[0] == "hello" || msg[0] == "hi":
                 ThetaApi.sendMsg("hello", channel);
                 break;
-            case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
-                Games.startNumberGame(msg, channel);
-                break;
+            // case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
+            //     Games.startNumberGame(msg, channel);
+            //     break;
             case msg[0] == "uptime":
                 ThetaApi.getUpTime(channel);
                 break;
@@ -60,6 +62,8 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
                 break;
             case msg[0] == "magic8":
+                msg[0] = '';
+                ThetaApi.sendMsg("Magic 8 ball: " + msg.toString() + "?",channel);
                 Games.play8Ball(usr, channel);
                 break;
         }
@@ -69,6 +73,8 @@ export default class BabbleCMD {
         msg = msg.toLowerCase().substr(1).split(" ");
         switch (true) {
             case msg[0] == "magic8":
+                msg[0] = '';
+                ThetaApi.sendMsg("Magic 8 ball: " + msg.toString() + "?",channel);
                 Games.play8Ball(usr, channel);
                 break;
             case msg[0] == "uptime":
