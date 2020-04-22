@@ -10,9 +10,9 @@ export default class BabbleCMD {
             case msg[0] == "hello" || msg[0] == "hi":
                 ThetaApi.sendMsg("hello", channel);
                 break;
-            case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
-                Games.startNumberGame(msg, channel);
-                break;
+            //case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
+            //    Games.startNumberGame(msg, channel);
+            //    break;
             case msg[0] == "uptime":
                 ThetaApi.getUpTime(channel);
                 break;
@@ -90,7 +90,9 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
                 break;
             case (msgType == "donation"  && channelConfig.alertConfig.donation):
+		console.log("donation");
                 ThetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
+		console.log("donation message sent!");
                 break;
             case (msgType == "follow" && channelConfig.alertConfig.follow):
                 ThetaApi.sendMsg("Thanks for the Follow !! Welcome @" + user.username, channel);

@@ -31,6 +31,7 @@ export default class Games {
                     ngChannelConfig.lastGame = {maxInt: maxInt};
                     ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
                 }else{
+	console.log("Debug", ngChannelConfig);
                     ThetaApi.sendMsg("Number Game already active", channel);
                 }
                 break;
