@@ -172,7 +172,6 @@ class Babble {
                 if (ngChannelConfig.active && onlyNumRegx.test(msgText)) {
                     Games.numGameManager(msgText, user, channelId);
                 }
-console.log(msgText);
                 if((msgText.startsWith(globalThis.defaultPrefix) || msgText.startsWith('/')) && user.type == "user") {
                     BabbleCmd.checkViewHooks(msgText, user, channelId);
                 }
