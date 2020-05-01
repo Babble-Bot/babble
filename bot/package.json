@@ -1,8 +1,8 @@
 {
   "name": "babble",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
-  "main": "./dist/src/main.js",
+  "main": "./dist/bot/src/main.js",
   "types": "./node_modules/@types/*.d.ts",
   "scripts": {
     "prestart": "tsc",
