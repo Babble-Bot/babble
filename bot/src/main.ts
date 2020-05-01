@@ -1,10 +1,13 @@
 "use strict";
 import PubNub = require('pubnub');
 import * as appConfig from './config.json';
+import * as channelDb from '../../db/theta/channels.json';
+import * as activeNumberGames from '../../db/theta/activeNumberGames.json';
 import ThetaApi from './utils/theta.api';
 import BabbleAip from './utils/babble.api';
 import BabbleCmd from './utils/commands';
 import Games from './games';
+import fs = require('fs');
 
 
 class Babble {
@@ -98,8 +101,8 @@ class Babble {
     };
 
     constructor() {
-        globalThis.channels = {};
-        globalThis.activeNumberGames = {};
+        globalThis.channels = channelDb;
+        globalThis.activeNumberGames = activeNumberGames;
         globalThis.subscribers = [];
         setInterval(async () => {
             let hasInstalls = await this.checkInstalsLoop();
@@ -125,8 +128,8 @@ class Babble {
                 });
             }
         );
-        // console.log(globalThis.activeNumberGames["usrxhgay62cewzpiymn"]);
-        // console.log(globalThis.activeNumberGames["usrxhgay62cewzpiymn"].players);
+        fs.writeFileSync('../db/theta/channels.json', JSON.stringify(globalThis.channels, null, 2));
+        fs.writeFileSync('../db/theta/activeNumberGames.json', JSON.stringify(globalThis.activeNumberGames, null, 2));
         return true
     }
 

@@ -48,5 +48,5 @@ interface Installs extends Array<Install> { }
 
 var defaultPrefix: string = "!";
 var subscribers: string[] = [];
-var channels: Channels = {};
+var channels: Channels;
 var activeNumberGames: ActiveNumberGames;

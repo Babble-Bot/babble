@@ -10,9 +10,9 @@ export default class BabbleCMD {
             case msg[0] == "hello" || msg[0] == "hi":
                 ThetaApi.sendMsg("hello", channel);
                 break;
-            //case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
-            //    Games.startNumberGame(msg, channel);
-            //    break;
+            case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
+                Games.startNumberGame(msg, channel);
+                break;
             case msg[0] == "uptime":
                 ThetaApi.getUpTime(channel);
                 break;
@@ -41,9 +41,9 @@ export default class BabbleCMD {
             case msg[0] == "hello" || msg[0] == "hi":
                 ThetaApi.sendMsg("hello", channel);
                 break;
-            // case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
-            //     Games.startNumberGame(msg, channel);
-            //     break;
+            case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
+                Games.startNumberGame(msg, channel);
+                break;
             case msg[0] == "uptime":
                 ThetaApi.getUpTime(channel);
                 break;
@@ -92,7 +92,7 @@ export default class BabbleCMD {
             case (msgType == "hello_message" && channelConfig.alertConfig.hello):
                 ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
                 break;
-            case (msgType == "donation"  && channelConfig.alertConfig.donation):
+            case (msgType == "donation" && channelConfig.alertConfig.donation):
                 ThetaApi.sendMsg("Thank you for the " + msg.data.tfuel + " :tfuel: !! @" + msg.data.sender.username, channel);
                 break;
             case (msgType == "follow" && channelConfig.alertConfig.follow):
@@ -128,18 +128,18 @@ export default class BabbleCMD {
         const types = ["all", "hello", "donation", "follow", "gift", "sub", "giftedsub", "level", "quiz", "raffle", "rafflewin"];
         const type = msg[1];
         const conf = msg[2];
-        if(types.indexOf(type) > -1){
-            if(conf == "on" || conf == "true"){
+        if (types.indexOf(type) > -1) {
+            if (conf == "on" || conf == "true") {
                 channelConfig.alertConfig[type] = true;
                 ThetaApi.sendMsg("Your Alert Config for " + type + " is now set to " + conf, channel);
-            }else if(conf == "off" || conf == "false"){
+            } else if (conf == "off" || conf == "false") {
                 channelConfig.alertConfig[type] = false;
                 ThetaApi.sendMsg("Your Alert Config for " + type + " is now set to " + conf, channel);
-            }else{
-                ThetaApi.sendMsg("Sorry but I did not recognize your Config option you can use [on, true, off, false]",channel);
+            } else {
+                ThetaApi.sendMsg("Sorry but I did not recognize your Config option you can use [on, true, off, false]", channel);
             }
-        }else{
-            ThetaApi.sendMsg("Sorry but I did not recognize the Type of alert you would like to change you can use [all, hello, donation, follow, gift, sub, giftedsub, level]",channel);
+        } else {
+            ThetaApi.sendMsg("Sorry but I did not recognize the Type of alert you would like to change you can use [all, hello, donation, follow, gift, sub, giftedsub, level, quiz, raffle, rafflewin]", channel);
         }
     }
 }

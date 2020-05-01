@@ -13,14 +13,15 @@
     "test": "mocha dist/test/*.spec.js"
   },
   "dependencies": {
+    "file-system": "^2.2.2",
     "node-fetch": "^2.6.0",
-    "pubnub": "^4.27.5"
+    "pubnub": "^4.27.6"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^13.13.2",
+    "@types/node": "^13.13.4",
     "chai": "^4.2.0",
-    "mocha": "^7.1.1"
+    "mocha": "^7.1.2"
   }
 }
