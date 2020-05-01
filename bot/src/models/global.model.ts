@@ -35,6 +35,9 @@ interface AlertConfig{
     sub: boolean;
     giftedsub: boolean;
     level: boolean;
+    quiz: boolean;
+    raffle: boolean;
+    rafflewin: boolean;
 }
 
 interface LastGame { maxInt: number; }
@@ -45,5 +48,5 @@ interface Installs extends Array<Install> { }
 
 var defaultPrefix: string = "!";
 var subscribers: string[] = [];
-var channels: Channels = {};
+var channels: Channels;
 var activeNumberGames: ActiveNumberGames;

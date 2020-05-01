@@ -1,12 +1,13 @@
 "use strict";
 
 import fetch from 'node-fetch';
+import * as channelDb from '../../../db/theta/channels.json';
 import * as appConfig from '../config.json';
 
 
 export default class ThetaApi {
     static async getUpTime(channel: any) {
-        let channelConfig = globalThis.channels[channel]
+        let channelConfig = channelDb[channel]
         let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId
         const response = await fetch(url);
         const json = await response.json();
@@ -73,7 +74,7 @@ export default class ThetaApi {
             "type": "chat_message",
             "message": msg
         };
-        let channelConfig = globalThis.channels[channel];
+        let channelConfig = channelDb[channel];
         let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId + "/channel_action?client_id=" + appConfig.clientId + "&client_secret=" + appConfig.clientSecret;
         fetch(url, {
             method: "POST",

@@ -1,13 +1,14 @@
 "use strict";
 
 import ThetaApi from './utils/theta.api';
+import * as activeNumberGames from '../../db/theta/activeNumberGames.json';
 
 export default class Games {
     /**
      * Number Game Init
      */
     static startNumberGame(msg, channel) {
-        let ngChannelConfig = globalThis.activeNumberGames[channel];
+        let ngChannelConfig = activeNumberGames[channel];
         let maxInt = Math.floor(Math.random() * 100) + 1; //Default of 100
         switch(msg[1]){
             case "kill":
@@ -31,6 +32,7 @@ export default class Games {
                     ngChannelConfig.lastGame = {maxInt: maxInt};
                     ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
                 }else{
+	console.log("Debug", ngChannelConfig);
                     ThetaApi.sendMsg("Number Game already active", channel);
                 }
                 break;
@@ -44,7 +46,7 @@ export default class Games {
         //TODO: auto send gift able item ?
         //TODO: set up limmit trys
         let guess = parseInt(msg);
-        let ngChannelConfig = globalThis.activeNumberGames[channel];
+        let ngChannelConfig = activeNumberGames[channel];
         let ngPlayer =  ((ngChannelConfig.players[usr.id]) ? ngChannelConfig.players[usr.id] : ngChannelConfig.players[usr.id] = {
             userId: usr.id,
             lastTry: guess,
