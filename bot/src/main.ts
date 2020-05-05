@@ -172,19 +172,21 @@ class Babble {
                 }
                 break;
             case msgType.includes("chat_message"):
-                if (ngChannelConfig.active && onlyNumRegx.test(msgText)) {
-                    Games.numGameManager(msgText, user, channelId);
-                }
-                if((msgText.startsWith(channelConfig.prefix) || msgText.startsWith('/')) && user.type == "user") {
-                    BabbleCmd.checkViewHooks(msgText, user, channelId);
-                }
-                if (msgText.startsWith(channelConfig.prefix) && user.type != "user") {
-                    if (user.type == "owner") {
-                        BabbleCmd.runCmd(msgText, user, channelId);
-                    } else if (user.type == "moderator") {
-                        BabbleCmd.modCmd(msgText, user, channelId);
-                    } else {
-                        ThetaApi.sendMsg("Sorry but you do not have Permission to do that", channelId);
+                if(msgText){
+                    if (ngChannelConfig.active && onlyNumRegx.test(msgText)) {
+                        Games.numGameManager(msgText, user, channelId);
+                    }
+                    if((msgText.startsWith(channelConfig.prefix) || msgText.startsWith('/')) && user.type == "user") {
+                        BabbleCmd.checkViewHooks(msgText, user, channelId);
+                    }
+                    if (msgText.startsWith(channelConfig.prefix) && user.type != "user") {
+                        if (user.type == "owner") {
+                            BabbleCmd.runCmd(msgText, user, channelId);
+                        } else if (user.type == "moderator") {
+                            BabbleCmd.modCmd(msgText, user, channelId);
+                        } else {
+                            ThetaApi.sendMsg("Sorry but you do not have Permission to do that", channelId);
+                        }
                     }
                 }
                 break;
