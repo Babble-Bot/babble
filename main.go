@@ -1,9 +1,7 @@
 package main
 
 import (
-	"net/http"
-
-	"github.com/Babble-Bot/babble/modles"
+	"github.com/Babble-Bot/babble/controllers"
 	"github.com/gin-gonic/contrib/static"
 	"github.com/gin-gonic/gin"
 )
@@ -20,15 +18,7 @@ func main() {
 
 	api := router.Group("/api/theta")
 	{
-		Channels := modles.Channels
-		api.GET("/:userId", func(c *gin.Context) {
-			var channels Channels
-			if err := c.ShouldBindUri(&channels); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"msg": err})
-				return
-			}
-			c.JSON(http.StatusOK, gin.H{"uid": channels.channel})
-		})
+		api.GET("/:userId", controllers.FindChannel)
 		// api.GET("/jokes", authMiddleware(), JokeHandler)
 		// api.POST("/jokes/like/:jokeID", authMiddleware(), LikeJoke)
 	}
