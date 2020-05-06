@@ -5,12 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Go API & Web Server",
-            "type": "go",
+            "type": "node",
             "request": "launch",
-            "mode": "auto",
-            "program": "${fileDirname}",
-            "showLog": true
+            "name": "Bot",
+            "program": "${workspaceFolder}/bot/src/main.ts",
+            "preLaunchTask": "build bot",
+            "outFiles": ["${workspaceFolder}/bot/dist/**/*.js"]
         }
     ]
 }

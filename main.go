@@ -14,16 +14,18 @@ type Response struct {
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
-
 	// Serve the frontend
 	router.Use(static.Serve("/", static.LocalFile("./app/build/web", true)))
 
 	api := router.Group("/api")
 	{
-		api.GET("/", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "pong",
-			})
+		api.GET("/theta/:userId", func(c *gin.Context) {
+			var channel Channels
+			if err := c.ShouldBindUri(&channel); err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"msg": err})
+				return
+			}
+			c.JSON(http.StatusOK, gin.H{"uid": channel.userId})
 		})
 		// api.GET("/jokes", authMiddleware(), JokeHandler)
 		// api.POST("/jokes/like/:jokeID", authMiddleware(), LikeJoke)
