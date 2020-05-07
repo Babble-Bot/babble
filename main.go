@@ -18,7 +18,8 @@ func main() {
 
 	api := router.Group("/api/theta")
 	{
-		api.GET("/:userId", controllers.FindChannel)
+		api.GET("/channels/:userId", controllers.FindChannel)
+		api.GET("/installs", controllers.Installs)
 		// api.GET("/jokes", authMiddleware(), JokeHandler)
 		// api.POST("/jokes/like/:jokeID", authMiddleware(), LikeJoke)
 	}
