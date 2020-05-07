@@ -6,6 +6,20 @@ import * as NumberGames from '../../../db/theta/activeNumberGames.json';
 
 const appDir = path.dirname(require.main.filename);
 export default class BabbleApi {
+    static updatePrefix(msg: any, channelId: any) {
+        channelDb.channels.forEach((channel) => {
+            if(channel.userId === channelId) {
+                channel.prefix = msg[1];
+            }
+        });
+    }
+    static updateBotName(msg: any, channelId: any) {
+        channelDb.channels.forEach((channel) => {
+            if(channel.userId === channelId) {
+                channel.botName = msg[1];
+            }
+        });
+    }
     static updateChannelsDB(channels: any) {
         if(channels !== channelDb.channels){
             fs.writeFileSync(path.join(appDir, '../../../../db/theta/channels.json'), JSON.stringify({channels:channels}, null, 2));
@@ -23,7 +37,7 @@ export default class BabbleApi {
             if(channel.userId === channelId) {
                 ChannelConfig = channel;
             }
-        })
+        });
         return ChannelConfig;
     }
 
@@ -33,7 +47,7 @@ export default class BabbleApi {
             if(channel.channelId === channelId) {
                 numberGameConfig = channel;
             }
-        })
+        });
         return numberGameConfig;
     }
 }

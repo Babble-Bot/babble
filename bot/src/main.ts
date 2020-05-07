@@ -118,6 +118,7 @@ class Babble {
                         userId: item.user_id,
                         accessToken: item.access_token,
                         prefix: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).prefix : appConfig.defaultPrefix),
+                        botName: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).botName : 'Babble'),
                         alertConfig: alertConfig
                     };
                     channels.push(channel);

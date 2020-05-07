@@ -17,11 +17,11 @@ class _MyHomePageState extends State<MyHomePage> {
     var url = 'https://api.theta.tv/v1/oauth/token?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&client_secret=pb6aesq10kqsebp3ztxz1cn7hgztegvr&grant_type=authorization_code&code='+code;
 
     // Await the http get response, then decode the json-formatted response.
-    var response = await http.get(url);
+    var response = await http.post(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      Navigator.pushNamed(context, '/dashboard');
       print('json: $jsonResponse.');
+      Navigator.pushNamed(context, '/dashboard');
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
@@ -42,13 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text('Welcome to Babble'),
             Image.asset('assets/babble.png',scale:10,fit: BoxFit.cover,),
-            RaisedButton(
-              child: Text('test login'),
-              color: Colors.white,
-              onPressed: () {
-                Navigator.pushNamed(context, '/dashboard');
-              },
-            ),
             RaisedButton(
               child: Text('Login With Theta'),
               color: Colors.white,

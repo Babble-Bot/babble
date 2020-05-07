@@ -9,6 +9,12 @@ export default class BabbleCMD {
     static modCmd(msg, usr, channel) {
         msg = msg.toLowerCase().substr(1).split(" ");
         switch (true) {
+            case msg[0] == "name":
+                BabbleAip.updateBotName(msg, channel);
+                break;
+            case msg[0] == "prefix":
+                BabbleAip.updatePrefix(msg, channel);
+                break;
             case msg[0] == "hello" || msg[0] == "hi":
                 ThetaApi.sendMsg("hello", channel);
                 break;
@@ -31,7 +37,7 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
                 break;
             case msg[0] == "magic8":
-                Games.play8Ball(usr, channel);
+                Games.play8Ball(msg, usr, channel);
                 break;
 
         }
@@ -40,6 +46,12 @@ export default class BabbleCMD {
     static runCmd(msg, usr, channel) {
         msg = msg.toLowerCase().substr(1).split(" ");
         switch (true) {
+            case msg[0] == "name":
+                BabbleAip.updateBotName(msg, channel);
+                break;
+            case msg[0] == "prefix":
+                BabbleAip.updatePrefix(msg, channel);
+                break;
             case msg[0] == "hello" || msg[0] == "hi":
                 ThetaApi.sendMsg("hello", channel);
                 break;
@@ -62,7 +74,7 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
                 break;
             case msg[0] == "magic8":
-                Games.play8Ball(usr, channel);
+                Games.play8Ball(msg, usr, channel);
                 break;
         }
     }
@@ -71,7 +83,7 @@ export default class BabbleCMD {
         msg = msg.toLowerCase().substr(1).split(" ");
         switch (true) {
             case msg[0] == "magic8":
-                Games.play8Ball(usr, channel);
+                Games.play8Ball(msg, usr, channel);
                 break;
             case msg[0] == "uptime":
                 ThetaApi.getUpTime(channel);

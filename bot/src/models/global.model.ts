@@ -10,6 +10,7 @@ interface Channel {
     userId: string;
     accessToken: string;
     prefix: string;
+    botName: string;
     alertConfig: AlertConfig;
 }
 

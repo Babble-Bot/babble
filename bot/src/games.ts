@@ -69,7 +69,11 @@ export default class Games {
     /**
      * Magic 8 Ball
      */
-    static play8Ball(usr, channel) {
+    static play8Ball(msg, usr, channel) {
+        this.removeItemOnce(msg, "!");
+        this.removeItemOnce(msg, "magic8");
+        this.removeItemOnce(msg, "?");
+        msg.toString().replace(",", " ");
         let responses = [
             'It is certain',
             'It is decidedly so',
@@ -93,7 +97,15 @@ export default class Games {
             'Very doubtful',
         ];
         let choice = responses[Math.floor(Math.random() * responses.length)];
-        let msg = "@" + usr.username + " " + choice;
-        ThetaApi.sendMsg(msg, channel);
+        let message = "@" + usr.username + "asked: " + msg + "Magic 8 Ball:" + choice;
+        ThetaApi.sendMsg(message, channel);
+    }
+
+    static removeItemOnce(arr, value) {
+        let index = arr.indexOf(value);
+        if (index > -1) {
+            arr.splice(index, 1);
+        }
+        return arr;
     }
 }
