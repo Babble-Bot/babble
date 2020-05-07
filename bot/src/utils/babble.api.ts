@@ -8,33 +8,32 @@ const appDir = path.dirname(require.main.filename);
 export default class BabbleApi {
     static updateChannelsDB(channels: any) {
         if(channels !== channelDb.channels){
-            const data = {
-                channels: channels
-            };
-            fs.writeFileSync(path.join(appDir, '../../../../db/theta/channels.json'), JSON.stringify(data, null, 2));
+            fs.writeFileSync(path.join(appDir, '../../../../db/theta/channels.json'), JSON.stringify({channels:channels}, null, 2));
         }
     }
     static updateNumGameDB(numberGames: any) {
         if(numberGames !== NumberGames.channels){
-            const data = {
-                channels: numberGames
-            };
-            fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify(data, null, 2));
+            fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify({channels: numberGames}, null, 2));
         }
     }
-    static getChannelConfig(channelId): any {
+
+    static getChannelConfig(channelId: string):Channel {
+        let ChannelConfig: Channel;
         channelDb.channels.forEach((channel) => {
             if(channel.userId === channelId) {
-                return channel;
+                ChannelConfig = channel;
             }
         })
+        return ChannelConfig;
     }
 
-    static getNumGameConfig(channelId): any {
+    static getNumGameConfig(channelId: string):NumberGame {
+        let numberGameConfig: NumberGame;
         NumberGames.channels.forEach((channel) => {
             if(channel.channelId === channelId) {
-                return channel;
+                numberGameConfig = channel;
             }
         })
+        return numberGameConfig;
     }
 }

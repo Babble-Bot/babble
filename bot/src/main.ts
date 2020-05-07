@@ -99,6 +99,7 @@ class Babble {
     async checkInstalsLoop() {
         let channels = [];
         let numberGames = [];
+        appConfig.subscribers.splice(0, appConfig.subscribers.length);
         await ThetaApi.getInstalls(
             data => {
                 data.forEach((item) => {
@@ -132,7 +133,6 @@ class Babble {
 
     init(hasInstalls: boolean) {
         if (hasInstalls) {
-            appConfig.subscribers.splice(0, appConfig.subscribers.length);
             this.startPubNub();
         }
     }

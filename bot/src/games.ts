@@ -12,7 +12,7 @@ export default class Games {
         let maxInt = Math.floor(Math.random() * 100) + 1; //Default of 100
         switch(msg[1]){
             case "kill":
-                ngChannelConfig = {active: false, winningNumber: 0, players: {}, lastGame: ngChannelConfig.lastGame};
+                ngChannelConfig = {channelId:channel, active: false, winningNumber: 0, players: {}, lastGame: ngChannelConfig.lastGame};
                 ThetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
                 break;
             case "repeat":
