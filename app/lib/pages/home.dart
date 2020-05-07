@@ -14,8 +14,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   void auth(String code) async {
-    // This example uses the Google Books API to search for books about http.
-    // https://developers.google.com/books/docs/overview
     var url = 'https://api.theta.tv/v1/oauth/token?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&client_secret=pb6aesq10kqsebp3ztxz1cn7hgztegvr&grant_type=authorization_code&code='+code;
 
     // Await the http get response, then decode the json-formatted response.
