@@ -1,13 +1,13 @@
 "use strict";
 
 import fetch from 'node-fetch';
-import * as channelDb from '../../../db/theta/channels.json';
+import BabbleAip from './babble.api';
 import * as appConfig from '../config.json';
 
 
 export default class ThetaApi {
     static async getUpTime(channel: any) {
-        let channelConfig = channelDb[channel]
+        let channelConfig = BabbleAip.getChannelConfig(channel);
         let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId
         const response = await fetch(url);
         const json = await response.json();
@@ -18,11 +18,6 @@ export default class ThetaApi {
         let diffMin = diff / (60 * 1000);
         let diffHour = diff / (60 * 60 * 1000);
         let diffDay = diff / (24 * 60 * 60 * 1000);
-        // console.log("In milliseconds: " + diff + " milliseconds.");
-        // console.log("In seconds: " + diffSec + " seconds.");
-        // console.log("In minutes: " + diffMin + " minutes.");
-        // console.log("In hours: " + diffHour + " hours.");
-        // console.log("In days: " + diffDay + " days.");
         let uptimeMsg = "";
         if (diffDay > 0) {
             uptimeMsg += Math.floor(diffDay) + " days, ";
@@ -74,7 +69,7 @@ export default class ThetaApi {
             "type": "chat_message",
             "message": msg
         };
-        let channelConfig = channelDb[channel];
+        let channelConfig = BabbleAip.getChannelConfig(channel);;
         let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId + "/channel_action?client_id=" + appConfig.clientId + "&client_secret=" + appConfig.clientSecret;
         fetch(url, {
             method: "POST",

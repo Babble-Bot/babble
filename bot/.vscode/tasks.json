@@ -7,7 +7,7 @@
             "label": "build bot",
             "type": "npm",
             "script": "start",
-            "path": "bot/",
+            "path": "./",
             "problemMatcher": []
         }
     ]

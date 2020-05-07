@@ -1,16 +1,11 @@
 "use strict";
-import fs = require('fs');
-import path = require('path');
-const appDir = path.dirname(require.main.filename);
+
 import PubNub = require('pubnub');
 import * as appConfig from './config.json';
-import * as channelDb from '../../db/theta/channels.json';
-import * as activeNumberGames from '../../db/theta/activeNumberGames.json';
 import ThetaApi from './utils/theta.api';
 import BabbleAip from './utils/babble.api';
 import BabbleCmd from './utils/commands';
 import Games from './games';
-
 
 class Babble {
     pubnub: any = new PubNub({ subscribeKey: appConfig.subscribeKey });
@@ -26,14 +21,6 @@ class Babble {
         quiz: false,
         raffle: false,
         rafflewin: true
-    };
-    ngDefault = {
-        active: false,
-        winningNumber: 0,
-        players: {},
-        lastGame: {
-            maxInt: 0
-        }
     };
     listener: any = {
         message: (m) => { this.messageHandler(m); },
@@ -110,35 +97,42 @@ class Babble {
     }
 
     async checkInstalsLoop() {
+        let channels = [];
+        let numberGames = [];
         await ThetaApi.getInstalls(
             data => {
                 data.forEach((item) => {
-                    let alertConfig = ((channelDb[item.user_id]) ? channelDb[item.user_id].alertConfig : this.alertDefault);
-                    let activeNumberGame = ((activeNumberGames[item.user_id]) ? activeNumberGames[item.user_id] : this.ngDefault);
+                    let alertConfig = (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig : this.alertDefault);
+                    let activeNumberGame = (BabbleAip.getNumGameConfig(item.user_id) ? BabbleAip.getNumGameConfig(item.user_id) : {
+                        channelId: item.user_id,
+                        active: false,
+                        winningNumber: 0,
+                        players: {},
+                        lastGame: {
+                            maxInt: 0
+                        }
+                    });
                     let channel: Channel = {
                         clientId: item.client_id,
                         userId: item.user_id,
                         accessToken: item.access_token,
-                        prefix: BabbleAip.getStreamerPrefix(),
+                        prefix: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).prefix : appConfig.defaultPrefix),
                         alertConfig: alertConfig
                     };
-                    channelDb[item.user_id] = channel;
-                    activeNumberGames[item.user_id] = activeNumberGame;
+                    channels.push(channel);
+                    numberGames.push(activeNumberGame);
+                    appConfig.subscribers.push("chat." + item.user_id);
                 });
             }
         );
-        
-        fs.writeFileSync(path.join(appDir, '../../../../db/theta/channels.json'), JSON.stringify(channelDb, null, 2));
-        fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify(activeNumberGames, null, 2));
+        BabbleAip.updateChannelsDB(channels);
+        BabbleAip.updateNumGameDB(numberGames);
         return true
     }
 
     init(hasInstalls: boolean) {
         if (hasInstalls) {
             appConfig.subscribers.splice(0, appConfig.subscribers.length);
-            for (let channel in channelDb) {
-                appConfig.subscribers.push("chat." + channel);
-            }
             this.startPubNub();
         }
     }
@@ -161,8 +155,8 @@ class Babble {
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
-        let channelConfig = channelDb[channelId];
-        let ngChannelConfig = activeNumberGames[channelId];
+        let channelConfig = BabbleAip.getChannelConfig(channelId);
+        let ngChannelConfig = BabbleAip.getNumGameConfig(channelId);
         let onlyNumRegx = /^\d+$/;
 
         switch (true) {
@@ -172,11 +166,11 @@ class Babble {
                 }
                 break;
             case msgType.includes("chat_message"):
-                if(msgText){
+                if (msgText) {
                     if (ngChannelConfig.active && onlyNumRegx.test(msgText)) {
                         Games.numGameManager(msgText, user, channelId);
                     }
-                    if((msgText.startsWith(channelConfig.prefix) || msgText.startsWith('/')) && user.type == "user") {
+                    if ((msgText.startsWith(channelConfig.prefix) || msgText.startsWith('/')) && user.type == "user") {
                         BabbleCmd.checkViewHooks(msgText, user, channelId);
                     }
                     if (msgText.startsWith(channelConfig.prefix) && user.type != "user") {
@@ -191,7 +185,7 @@ class Babble {
                 }
                 break;
             default:
-                if(channelConfig.alertConfig.all){
+                if (channelConfig.alertConfig.all) {
                     BabbleCmd.statusHandler(msg, channelId);
                 }
                 break;

@@ -1,6 +1,7 @@
 "use strict";
 import * as channelDb from '../../../db/theta/channels.json';
 import ThetaApi from './theta.api';
+import BabbleAip from './babble.api';
 import Games from '../games';
 
 export default class BabbleCMD {
@@ -88,7 +89,7 @@ export default class BabbleCMD {
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
-        let channelConfig = channelDb[channel];
+        let channelConfig = BabbleAip.getChannelConfig(channel);
         switch (true) {
             case (msgType == "hello_message" && channelConfig.alertConfig.hello):
                 ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
@@ -125,7 +126,7 @@ export default class BabbleCMD {
     }
 
     static alertConfigManager(msg, channel) {
-        const channelConfig = channelDb[channel];
+        const channelConfig = BabbleAip.getChannelConfig(channel);
         const types = ["all", "hello", "donation", "follow", "gift", "sub", "giftedsub", "level", "quiz", "raffle", "rafflewin"];
         const type = msg[1];
         const conf = msg[2];

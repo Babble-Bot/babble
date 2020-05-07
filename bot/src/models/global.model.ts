@@ -14,6 +14,7 @@ interface Channel {
 }
 
 interface NumberGame {
+    channelId: string;
     active: boolean;
     winningNumber: number,
     players: Players,

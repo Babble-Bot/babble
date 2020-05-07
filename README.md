@@ -22,7 +22,12 @@ in order to use this bot with theta you must make a config file. `/bot/config.js
     "clientSecret": "<clientId>"
 }
 ```
-you must add your db json files to the server `./db/[platform]` these files must be must named to match and inited with an empty object ie `{}`
+you must add your db json files to the server `./db/[platform]` these files must be must named to match and inited with an empty object ie
+```json
+{
+  "channels": []
+}
+```
 currently.
 
 Trello: https://trello.com/b/ouoA0dci/babble-10-dev

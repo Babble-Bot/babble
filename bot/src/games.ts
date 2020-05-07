@@ -1,14 +1,14 @@
 "use strict";
 
 import ThetaApi from './utils/theta.api';
-import * as activeNumberGames from '../../db/theta/activeNumberGames.json';
+import BabbleAip from './utils/babble.api';
 
 export default class Games {
     /**
      * Number Game Init
      */
     static startNumberGame(msg, channel) {
-        let ngChannelConfig = activeNumberGames[channel];
+        let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
         let maxInt = Math.floor(Math.random() * 100) + 1; //Default of 100
         switch(msg[1]){
             case "kill":
@@ -46,7 +46,7 @@ export default class Games {
         //TODO: auto send gift able item ?
         //TODO: set up limmit trys
         let guess = parseInt(msg);
-        let ngChannelConfig = activeNumberGames[channel];
+        let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
         let ngPlayer =  ((ngChannelConfig.players[usr.id]) ? ngChannelConfig.players[usr.id] : ngChannelConfig.players[usr.id] = {
             userId: usr.id,
             lastTry: guess,

@@ -25,6 +25,11 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
   final String code = Uri.base.queryParameters['code'];
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   void auth(String code) async {
     // This example uses the Google Books API to search for books about http.
     // https://developers.google.com/books/docs/overview
@@ -34,20 +39,16 @@ class MyHomePage extends StatefulWidget {
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      var itemCount = jsonResponse['totalItems'];
-      print('Number of books about http: $itemCount.');
+      print('json: $jsonResponse.');
     } else {
       print('Request failed with status: ${response.statusCode}.');
     }
   }
-  
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    if(widget.code != ''){
+      auth(widget.code);
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
