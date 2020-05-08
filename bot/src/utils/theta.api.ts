@@ -65,11 +65,13 @@ export default class ThetaApi {
     }
 
     static sendMsg(msg, channel) {
+        let channelConfig = BabbleAip.getChannelConfig(channel);
         let body = {
             "type": "chat_message",
-            "message": msg
+            "message": msg,
+            "display_name": channelConfig.botName,
+            "intl": false
         };
-        let channelConfig = BabbleAip.getChannelConfig(channel);;
         let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId + "/channel_action?client_id=" + appConfig.clientId + "&client_secret=" + appConfig.clientSecret;
         fetch(url, {
             method: "POST",
