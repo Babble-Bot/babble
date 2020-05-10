@@ -19,7 +19,9 @@ in order to use this bot with theta you must make a config file. `/bot/config.js
 {
     "subscribeKey": "<subscribeKey>",
     "clientId": "<clientId>",
-    "clientSecret": "<clientId>"
+    "clientSecret": "<clientId>",
+    "defaultPrefix": "!",
+    "subscribers": []
 }
 ```
 you must add your db json files to the server `./db/[platform]` these files must be must named to match and inited with an empty object ie

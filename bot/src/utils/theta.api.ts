@@ -2,6 +2,7 @@
 
 import fetch from 'node-fetch';
 import BabbleAip from './babble.api';
+import Helpers from './helpers';
 import * as appConfig from '../config.json';
 
 
@@ -81,5 +82,16 @@ export default class ThetaApi {
                 "Content-Type": "application/json"
             },
         });
+    }
+
+    static timedMsg(msg, channel) {
+        const intervalInMs = parseInt(msg[1]) * 60000;//convert min to ms
+        Helpers.removeItemOnce(msg, "!");
+        Helpers.removeItemOnce(msg, "timer");
+        Helpers.removeItemOnce(msg, msg[1]);
+        msg = msg.toString().replace(",", " ");
+        setInterval(async () => {
+            this.sendMsg(msg,channel);
+        },intervalInMs);
     }
 }

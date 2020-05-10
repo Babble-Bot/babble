@@ -6,45 +6,9 @@ import Games from '../games';
 
 export default class BabbleCMD {
 
-    static modCmd(msg, usr, channel) {
-        msg = msg.toLowerCase().substr(1).split(" ");
-        switch (true) {
-            case msg[0] == "name":
-                BabbleAip.updateBotName(msg, channel);
-                break;
-            case msg[0] == "prefix":
-                BabbleAip.updatePrefix(msg, channel);
-                break;
-            case msg[0] == "hello" || msg[0] == "hi":
-                ThetaApi.sendMsg("hello", channel);
-                break;
-            case msg[0] == "num" || msg[0] == "number" || msg[0] == "ng":
-                Games.startNumberGame(msg, channel);
-                break;
-            case msg[0] == "uptime":
-                ThetaApi.getUpTime(channel);
-                break;
-            case msg[0] == "alert":
-                this.alertConfigManager(msg, channel);
-                break;
-            case msg[0] == "streamkey":
-                ThetaApi.sendMsg("Want a Theta StreamKey; This is how: https://community.theta.tv/stream-keys/", channel);
-                break;
-            case msg[0] == "patreon":
-                ThetaApi.sendMsg("Feeling Supportive; Love BABBLE; Please be a Great Freind and Visit my PATREON: https://www.patreon.com/babblechatbot?fan_landing=true", channel);
-                break;
-            case msg[0] == "babble" || msg[0] == "support" || msg[0] == "info" || msg[0] == "help":
-                ThetaApi.sendMsg("Babble Support Discord: https://www.discord.gg/73gusq7", channel);
-                break;
-            case msg[0] == "magic8":
-                Games.play8Ball(msg, usr, channel);
-                break;
-
-        }
-    }
-
     static runCmd(msg, usr, channel) {
-        msg = msg.toLowerCase().substr(1).split(" ");
+        msg = msg.substr(1).split(" ");
+        msg[0] = msg[0].toLowerCase();
         switch (true) {
             case msg[0] == "name":
                 BabbleAip.updateBotName(msg, channel);
@@ -76,6 +40,9 @@ export default class BabbleCMD {
             case msg[0] == "magic8":
                 Games.play8Ball(msg, usr, channel);
                 break;
+            // case msg[0] == "timedmsg":
+            //     ThetaApi.timedMsg(msg, channel);
+            //     break;
         }
     }
 
@@ -133,6 +100,11 @@ export default class BabbleCMD {
                 break;
             case (msgType == "raffle_winner" && channelConfig.alertConfig.rafflewin):
                 ThetaApi.sendMsg("@" + user.username + " congrats on winning " + msg.data.item.name + " GG's in chat everyone", channel);
+                break;
+            case msgType == "system_chat_message":
+                if (msgText.includes("has raided the stream")) {
+                    ThetaApi.sendMsg("RAID HYPE!! :nominal: :nominal: @" + user.username + "went crazy :crazy: Spam Raid in chat everyone!!", channel);
+                }
                 break;
         }
     }

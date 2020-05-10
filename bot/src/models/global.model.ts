@@ -22,12 +22,6 @@ interface NumberGame {
     lastGame: LastGame;
 }
 
-interface Install {
-    client_id: string;
-    user_id: string;
-    access_token: string;
-}
-
 interface AlertConfig{
     all: boolean;
     hello: boolean;
@@ -42,11 +36,16 @@ interface AlertConfig{
     rafflewin: boolean;
 }
 
+interface TimedMessage{
+    interval: number,
+    message: string
+}
+
 interface LastGame { maxInt: number; }
+interface TimedMessages { [index: number]: TimedMessages; }
 interface Players { [index: string]: Player }
 interface Channels { [index: string]: Channel; }
 interface ActiveNumberGames { [index: string]: NumberGame; }
-interface Installs extends Array<Install> { }
 
 var defaultPrefix: string = "!";
 var subscribers: string[] = [];

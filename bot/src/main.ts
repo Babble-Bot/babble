@@ -161,11 +161,6 @@ class Babble {
         let onlyNumRegx = /^\d+$/;
 
         switch (true) {
-            case msgType == "system_chat_message":
-                if (msgText.includes("has raided the stream")) {
-                    ThetaApi.sendMsg("RAID HYPE!! :nominal: :nominal: @" + user.username + "went crazy :crazy: Spam Raid in chat everyone!!", channelId);
-                }
-                break;
             case msgType.includes("chat_message"):
                 if (msgText) {
                     if (ngChannelConfig.active && onlyNumRegx.test(msgText)) {
@@ -175,10 +170,8 @@ class Babble {
                         BabbleCmd.checkViewHooks(msgText, user, channelId);
                     }
                     if (msgText.startsWith(channelConfig.prefix) && user.type != "user") {
-                        if (user.type == "owner") {
+                        if (user.type == "owner" || user.type == "moderator") {
                             BabbleCmd.runCmd(msgText, user, channelId);
-                        } else if (user.type == "moderator") {
-                            BabbleCmd.modCmd(msgText, user, channelId);
                         } else {
                             ThetaApi.sendMsg("Sorry but you do not have Permission to do that", channelId);
                         }

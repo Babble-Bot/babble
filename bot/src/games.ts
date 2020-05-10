@@ -2,6 +2,7 @@
 
 import ThetaApi from './utils/theta.api';
 import BabbleAip from './utils/babble.api';
+import Helpers from './utils/helpers';
 
 export default class Games {
     /**
@@ -9,7 +10,7 @@ export default class Games {
      */
     static startNumberGame(msg, channel) {
         let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
-        let maxInt = Math.floor(Math.random() * 100) + 1; //Default of 100
+        let maxInt: number = Math.floor(Math.random() * 100) + 1; //Default of 100
         switch(msg[1]){
             case "kill":
                 ngChannelConfig = {channelId:channel, active: false, winningNumber: 0, players: {}, lastGame: ngChannelConfig.lastGame};
@@ -32,7 +33,6 @@ export default class Games {
                     ngChannelConfig.lastGame = {maxInt: maxInt};
                     ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
                 }else{
-	console.log("Debug", ngChannelConfig);
                     ThetaApi.sendMsg("Number Game already active", channel);
                 }
                 break;
@@ -45,7 +45,7 @@ export default class Games {
     static numGameManager(msg, usr, channel) {
         //TODO: auto send gift able item ?
         //TODO: set up limmit trys
-        let guess = parseInt(msg);
+        let guess: number = parseInt(msg);
         let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
         let ngPlayer =  ((ngChannelConfig.players[usr.id]) ? ngChannelConfig.players[usr.id] : ngChannelConfig.players[usr.id] = {
             userId: usr.id,
@@ -70,9 +70,9 @@ export default class Games {
      * Magic 8 Ball
      */
     static play8Ball(msg, usr, channel) {
-        this.removeItemOnce(msg, "!");
-        this.removeItemOnce(msg, "magic8");
-        this.removeItemOnce(msg, "?");
+        Helpers.removeItemOnce(msg, "!");
+        Helpers.removeItemOnce(msg, "magic8");
+        Helpers.removeItemOnce(msg, "?");
         msg.toString().replace(",", " ");
         let responses = [
             'It is certain',
@@ -97,15 +97,7 @@ export default class Games {
             'Very doubtful',
         ];
         let choice = responses[Math.floor(Math.random() * responses.length)];
-        let message = "@" + usr.username + "asked: " + msg + "Magic 8 Ball:" + choice;
+        let message = "@" + usr.username + "asked: " + msg + "? Magic 8 Ball:" + choice;
         ThetaApi.sendMsg(message, channel);
-    }
-
-    static removeItemOnce(arr, value) {
-        let index = arr.indexOf(value);
-        if (index > -1) {
-            arr.splice(index, 1);
-        }
-        return arr;
     }
 }
