@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/socialBar.dart';
-import 'dart:convert' as convert;
-import 'package:http/http.dart' as http;
+import '../utils/thetaApi.dart';
+import '../models/ThetaAuth.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -13,23 +13,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  void auth(String code) async {
-    var url = 'https://api.theta.tv/v1/oauth/token?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&client_secret=pb6aesq10kqsebp3ztxz1cn7hgztegvr&grant_type=authorization_code&code='+code;
 
-    // Await the http get response, then decode the json-formatted response.
-    var response = await http.post(url);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      print('json: $jsonResponse.');
-      Navigator.pushNamed(context, '/dashboard');
-    } else {
-      print('Request failed with status: ${response.statusCode}.');
-    }
-  }
   @override
   Widget build(BuildContext context) {
     if(widget.code != ''){
-      auth(widget.code);
+      final ThetaAuth = requestThetaAuth(widget.code);
+      if(ThetaAuth != null){
+        Navigator.pushNamed(context, '/dashboard');
+      }
     }
     return Scaffold(
       appBar: AppBar(
