@@ -11,7 +11,7 @@ class ThetaApi {
     var response = await http.post(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      print('json: $jsonResponse.');
+      //print('json: $jsonResponse.');
       //Navigator.pushNamed(context, '/dashboard');
     } else {
       print('Request failed with status: ${response.statusCode}.');
