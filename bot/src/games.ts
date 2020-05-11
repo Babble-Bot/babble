@@ -73,7 +73,8 @@ export default class Games {
         Helpers.removeItemOnce(msg, "!");
         Helpers.removeItemOnce(msg, "magic8");
         Helpers.removeItemOnce(msg, "?");
-        msg = msg.toString().replace(",", " ");
+        msg = msg.toString();
+        msg = msg.replace(",", " ");
         let responses = [
             'It is certain',
             'It is decidedly so',

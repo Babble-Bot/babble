@@ -89,7 +89,8 @@ export default class ThetaApi {
         Helpers.removeItemOnce(msg, "!");
         Helpers.removeItemOnce(msg, "timer");
         Helpers.removeItemOnce(msg, msg[1]);
-        msg = msg.toString().replace(",", " ");
+        msg = msg.toString();
+        msg = msg.replace(",", " ");
         setInterval(async () => {
             this.sendMsg(msg,channel);
         },intervalInMs);
