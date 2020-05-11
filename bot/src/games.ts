@@ -73,7 +73,7 @@ export default class Games {
         Helpers.removeItemOnce(msg, "!");
         Helpers.removeItemOnce(msg, "magic8");
         Helpers.removeItemOnce(msg, "?");
-        msg.toString().replace(",", " ");
+        msg = msg.toString().replace(",", " ");
         let responses = [
             'It is certain',
             'It is decidedly so',
@@ -97,7 +97,7 @@ export default class Games {
             'Very doubtful',
         ];
         let choice = responses[Math.floor(Math.random() * responses.length)];
-        let message = "@" + usr.username + "asked: " + msg + "? Magic 8 Ball:" + choice;
+        let message = "@" + usr.username + " asked: " + msg + "? Magic 8 Ball: " + choice;
         ThetaApi.sendMsg(message, channel);
     }
 }
