@@ -41,7 +41,7 @@ interface TimedMessage{
     message: string
 }
 
-interface LastGame { maxInt?: any; }
+interface LastGame { maxInt: number; }
 interface TimedMessages { [index: number]: TimedMessages; }
 interface Players { [index: string]: Player }
 interface Channels { [index: string]: Channel; }

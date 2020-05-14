@@ -16,9 +16,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => MyHomePage(title: 'Babble Bot'),
-        // When navigating to the "/second" route, build the SecondScreen widget.
         '/dashboard': (context) => Dashboard(title: "DashBoard"),
       },
     );

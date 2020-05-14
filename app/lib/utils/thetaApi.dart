@@ -1,8 +1,8 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/ThetaAuth.dart';
 
-class ThetaApi {
-  Future<ThetaAuth> requestThetaAuth(String code) async {
+Future<ThetaAuth> requestAuth(String code) async {
     var url = 'https://api.theta.tv/v1/oauth/token?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&client_secret=pb6aesq10kqsebp3ztxz1cn7hgztegvr&grant_type=authorization_code&code=' + code;
     final http.Response response = await http.post(
       url,
@@ -20,6 +20,5 @@ class ThetaApi {
       throw Exception('Failed to login with Theta ${response.statusCode}');
     }
   }
-}
 
 

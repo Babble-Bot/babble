@@ -93,7 +93,7 @@ class Babble {
         setInterval(async () => {
             let hasInstalls = await this.checkInstalsLoop();
             this.init(hasInstalls);
-        }, 10000);
+        }, 5000);
     }
 
     async checkInstalsLoop() {

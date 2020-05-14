@@ -16,8 +16,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.code != ''){
-      final ThetaAuth = requestThetaAuth(widget.code);
+    if(widget.code != null){
+      final ThetaAuth = requestAuth(widget.code);
       if(ThetaAuth != null){
         Navigator.pushNamed(context, '/dashboard');
       }

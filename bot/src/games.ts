@@ -22,7 +22,7 @@ export default class Games {
                 break;
             default:
                 if (msg[1]) {
-                    maxInt = msg[1];
+                    maxInt = parseInt(msg[1]);
                 }
                 if (maxInt < 25) {
                     maxInt = 25;
