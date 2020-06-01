@@ -1,4 +1,25 @@
 class ThetaAuth {
+  String status;
+  Body body;
+
+  ThetaAuth({this.status, this.body});
+
+  ThetaAuth.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    body = json['body'] != null ? new Body.fromJson(json['body']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    if (this.body != null) {
+      data['body'] = this.body.toJson();
+    }
+    return data;
+  }
+}
+
+class Body {
   String clientId;
   String userId;
   String authorizationCode;
@@ -7,7 +28,7 @@ class ThetaAuth {
   int expiresIn;
   bool revoked;
 
-  ThetaAuth(
+  Body(
       {this.clientId,
       this.userId,
       this.authorizationCode,
@@ -16,7 +37,7 @@ class ThetaAuth {
       this.expiresIn,
       this.revoked});
 
-  ThetaAuth.fromJson(Map<String, dynamic> json) {
+  Body.fromJson(Map<String, dynamic> json) {
     clientId = json['client_id'];
     userId = json['user_id'];
     authorizationCode = json['authorization_code'];
