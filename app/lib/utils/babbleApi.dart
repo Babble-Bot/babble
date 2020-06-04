@@ -1,9 +1,13 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/babble/channel.dart';
 import '../models/babble/installs.dart';
 
-class BabbleApi {
+class BabbleApi with ChangeNotifier, DiagnosticableTreeMixin{
+  ApiNotifier() {
+    getInstalls();
+  }
 
   Future<BabbleChannel> getChannel(String userId) async {
     var url = 'http://babblechatbot.com/api/theta/channels/' + userId;
@@ -21,17 +25,18 @@ class BabbleApi {
   }
 
   Future<BabbleInstalls> getInstalls() async {
+    BabbleInstalls installs;
     var url = 'http://babblechatbot.com/api/theta/installs';
     final http.Response response = await http.get(url);
     if (response.statusCode == 200) {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
-      BabbleInstalls installs = BabbleInstalls.fromJson(json.decode(response.body));
-      return installs;
+      installs = BabbleInstalls.fromJson(json.decode(response.body));
     } else {
       // If the server did not return a 201 CREATED response,
       // then throw an exception.
       throw Exception('Failed get Channel ${response.statusCode}');
     }
+    notifyListeners();
   }
 }

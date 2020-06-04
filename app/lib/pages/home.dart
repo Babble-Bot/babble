@@ -1,18 +1,23 @@
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/socialBar.dart';
+import '../utils/babbleApi.dart';
+import '../models/babble/installs.dart';
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key key, this.title, BabbleInstalls installs}) : super(key: key);
   final String title;
+  BabbleInstalls installs;
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
+  
   @override
   Widget build(BuildContext context) {
+    var installs = widget.installs.body;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -23,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Welcome to Babble'),
+            Text("Current Theta Installs: ${installs.theta}"),
             Image.asset('assets/babble.png',scale:10,fit: BoxFit.cover,),
             RaisedButton(
               child: Text('Login With Theta'),

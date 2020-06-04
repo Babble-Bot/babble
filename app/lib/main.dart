@@ -16,8 +16,8 @@ void main() {
     MultiProvider(
       providers: [
         Provider(create: (_) => Code()),
-        FutureProvider<ThetaAuth>(create:(_) => ThetaApi().requestAuth(Code().code)),
-        FutureProvider<BabbleInstalls>(create:(_) => BabbleApi().getInstalls()),
+        FutureProvider(create:(_) => ThetaApi().requestAuth(Code().code)),
+        FutureProvider(create:(_) => BabbleApi().getInstalls()),
       ],
       child:MyApp()
     ),
@@ -37,10 +37,9 @@ class Code with ChangeNotifier, DiagnosticableTreeMixin {
 }
 
 class MyApp extends StatelessWidget {
-  String code;
   @override
   Widget build(BuildContext context) {
-    
+    var installs = context.read<BabbleInstalls>();
     return MaterialApp(
       initialRoute: Code() == "" ? '/dashboard' : '/',
       title: 'Babble',
@@ -48,7 +47,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       routes: {
-        '/': (context) => MyHomePage(title: 'Babble Bot'),
+        '/': (context) => MyHomePage(title: 'Babble Bot', installs: installs),
         '/dashboard': (context) => Dashboard(title: "DashBoard", code: Code().code),
       },
     );
