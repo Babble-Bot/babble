@@ -39,7 +39,7 @@ class Code with ChangeNotifier, DiagnosticableTreeMixin {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var installs = context.read<BabbleInstalls>();
+    var installs = context.watch<BabbleInstalls>();
     return MaterialApp(
       initialRoute: Code() == "" ? '/dashboard' : '/',
       title: 'Babble',

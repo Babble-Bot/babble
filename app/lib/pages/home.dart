@@ -17,6 +17,7 @@ class _MyHomePageState extends State<MyHomePage> {
   
   @override
   Widget build(BuildContext context) {
+    bool isLoading = true; /// TODO make like dashboard page
     var installs = widget.installs.body;
     return Scaffold(
       appBar: AppBar(
@@ -28,6 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Welcome to Babble'),
+            
             Text("Current Theta Installs: ${installs.theta}"),
             Image.asset('assets/babble.png',scale:10,fit: BoxFit.cover,),
             RaisedButton(
