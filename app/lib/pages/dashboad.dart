@@ -1,9 +1,12 @@
-import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import '../widgets/socialBar.dart';
-import '../models/theta-auth.dart';
-import '../models/babble-channel.dart';
+import '../widgets/alertConfig.dart';
+import '../widgets/socialLinks.dart';
+import '../models/theta/auth.dart';
+import '../models/theta/user.dart';
+import '../models/babble/channel.dart';
 import '../utils/thetaApi.dart';
 import '../utils/babbleApi.dart';
 
@@ -18,15 +21,18 @@ class Dashboard extends StatefulWidget {
 class _DashboardStatus extends State<Dashboard> {
   BabbleChannel channel;
   ThetaAuth thetaAuth;
+  ThetaUser thetaUser;
   bool isLoading = true;
   void getDataFromAPI() async {
     thetaAuth = await ThetaApi().requestAuth(widget.code);
     if(thetaAuth.status == "SUCCESS"){
       channel = await BabbleApi().getChannel(thetaAuth.body.userId);
+      thetaUser = await ThetaApi().getUser(thetaAuth.body.userId);
     }
     if(channel != null){
       setState(() {
         channel = channel;
+        thetaUser = thetaUser;
         isLoading = false;
       });
     }
@@ -50,8 +56,15 @@ class _DashboardStatus extends State<Dashboard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              Text("Loading"),
               CircularProgressIndicator(
                 backgroundColor: Colors.lightBlue,
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  SocialBar()
+                ]
               )
             ]
           )
@@ -61,23 +74,60 @@ class _DashboardStatus extends State<Dashboard> {
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
+          title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("${channel.body.clientId}"),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  SocialBar()
-                ]
-              )
+            children: [
+              Text(thetaUser.body.username),
+              Container(
+                width: 32,
+                height: 32,
+                padding: EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image: NetworkImage(thetaUser.body.avatarUrl)
+                    )
+                )
+              ),
             ],
-          )
+          ),
+          actions: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+              ]
+            ),
+            // IconButton(
+            //   icon: Icon(Icons.settings),
+            //   onPressed: (){},
+            // ),
+          ],
+        ),
+        body: Column(
+          children: <Widget>[
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children:[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    AlertConfigCard(config: channel.body.alertConfig, width: 300),
+                    //SocialLinksCard(config: channel.body.alertConfig, width: 300)
+                  ],
+                )
+              ]
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                SocialBar()
+              ]
+            )
+          ],
         )
-      );
+        );
     }
   }
 }

@@ -21,3 +21,8 @@ type ChannelsDB struct {
 		} `json:"alertConfig"`
 	} `json:"channels"`
 }
+
+type Installs struct {
+	Theta  int `json:theta`
+	Twitch int `json:twitch`
+}
