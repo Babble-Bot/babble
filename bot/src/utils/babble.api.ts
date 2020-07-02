@@ -31,6 +31,15 @@ export default class BabbleApi {
         }
     }
 
+    static updateNumGameChannelConfig(channelId: string, updatedNumberGameConfig: any) {
+        NumberGames.channels.forEach((channel, i) => {
+            if(channel.channelId === channelId) {
+                NumberGames.channels[i] = updatedNumberGameConfig;
+            }
+        });
+        fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify({channels: NumberGames}, null, 2));
+    }
+
     static getChannelConfig(channelId: string):Channel {
         let ChannelConfig: Channel;
         channelDb.channels.forEach((channel) => {

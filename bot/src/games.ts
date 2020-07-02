@@ -14,10 +14,12 @@ export default class Games {
         switch(msg[1]){
             case "kill":
                 ngChannelConfig = {channelId:channel, active: false, winningNumber: 0, players: {}, lastGame: ngChannelConfig.lastGame};
+                BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
                 ThetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
                 break;
             case "repeat":
                 ngChannelConfig.winningNumber = Math.floor(Math.random() * ngChannelConfig.lastGame.maxInt) + 1;
+                BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
                 ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + ngChannelConfig.lastGame.maxInt, channel);
                 break;
             default:
@@ -31,6 +33,7 @@ export default class Games {
                     ngChannelConfig.active = true;
                     ngChannelConfig.winningNumber = Math.floor(Math.random() * maxInt) + 1;
                     ngChannelConfig.lastGame = {maxInt: maxInt};
+                    BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
                     ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
                 }else{
                     ThetaApi.sendMsg("Number Game already active", channel);
@@ -57,12 +60,14 @@ export default class Games {
             ThetaApi.sendMsg("@" + usr.username + " Sorry but you guess's can not be consecutive ie. 1 2 3 or 3 2 1", channel);
         }else{
             ngPlayer.lastTry = guess;
+            BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
         }
         if (guess == ngChannelConfig.winningNumber) {
             ThetaApi.sendMsg("Congrats !! @" + usr.username + " Your the winner with: " + ngChannelConfig.winningNumber + ":flex:", channel);
             ngChannelConfig.winningNumber = 0;
             ngChannelConfig.active = false;
             ngChannelConfig.players = {};
+            BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
         }
     }
 
@@ -73,8 +78,7 @@ export default class Games {
         Helpers.removeItemOnce(msg, "!");
         Helpers.removeItemOnce(msg, "magic8");
         Helpers.removeItemOnce(msg, "?");
-        msg = msg.toString();
-        msg = msg.replace(",", " ");
+        msg = msg.toString().split(",").join(" ");
         let responses = [
             'It is certain',
             'It is decidedly so',
