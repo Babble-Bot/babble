@@ -20,6 +20,7 @@ class ThetaApi with ChangeNotifier, DiagnosticableTreeMixin {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       thetaAuth = ThetaAuth.fromJson(json.decode(response.body));
+      notifyListeners();
       return thetaAuth;
     } else {
       // If the server did not return a 201 CREATED response,
@@ -35,6 +36,7 @@ class ThetaApi with ChangeNotifier, DiagnosticableTreeMixin {
       // If the server did return a 201 CREATED response,
       // then parse the JSON.
       thetaUser = ThetaUser.fromJson(json.decode(response.body));
+      notifyListeners();
       return thetaUser;
     } else {
       // If the server did not return a 201 CREATED response,
@@ -42,12 +44,6 @@ class ThetaApi with ChangeNotifier, DiagnosticableTreeMixin {
       throw Exception('Failed to login with Theta ${response.statusCode}');
     }
   }
-
-  //https://api.flutter.dev/flutter/foundation/DiagnosticableTreeMixin/debugFillProperties.html
-  // void debugFillProperties(DiagnosticPropertiesBuilder properties) {
-  //   super.debugFillProperties(properties);
-  //   properties.add();
-  // }
 }
 
 

@@ -39,39 +39,39 @@ class _alertConfigCardState extends State<AlertConfigCard> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[ Text("Hello:"), Switch(value: widget.config.donation, onChanged: (bool value) {  },)]
+                children: <Widget>[ Text("Donation:"), Switch(value: widget.config.donation, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[ Text("Hello:"), Switch(value: widget.config.follow, onChanged: (bool value) {  },)]
+                children: <Widget>[ Text("Follo:"), Switch(value: widget.config.follow, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[Text("Hello:"), Switch(value: widget.config.gift, onChanged: (bool value) {  },)]
+                children: <Widget>[Text("Gift:"), Switch(value: widget.config.gift, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[Text("Hello:"), Switch(value: widget.config.sub, onChanged: (bool value) {  },)]
+                children: <Widget>[Text("Subs:"), Switch(value: widget.config.sub, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[Text("Hello:"), Switch(value: widget.config.giftedsub, onChanged: (bool value) {  },)]
+                children: <Widget>[Text("Gifted Subs:"), Switch(value: widget.config.giftedsub, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[ Text("Hello:"), Switch(value: widget.config.level, onChanged: (bool value) {  },)]
+                children: <Widget>[ Text("Level:"), Switch(value: widget.config.level, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[ Text("Hello:"), Switch(value: widget.config.quiz, onChanged: (bool value) {  },)]
+                children: <Widget>[ Text("Quiz:"), Switch(value: widget.config.quiz, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[ Text("Hello:"), Switch(value: widget.config.raffle, onChanged: (bool value) {  },)]
+                children: <Widget>[ Text("Raffle:"), Switch(value: widget.config.raffle, onChanged: (bool value) {  },)]
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[ Text("Hello:"), Switch(value: widget.config.rafflewin, onChanged: (bool value) {  },)]
+                children: <Widget>[ Text("Win Raffle:"), Switch(value: widget.config.rafflewin, onChanged: (bool value) {  },)]
               ),
             ]
           ),

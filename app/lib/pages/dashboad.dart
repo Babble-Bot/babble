@@ -1,6 +1,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/socialBar.dart';
 import '../widgets/alertConfig.dart';
 import '../widgets/socialLinks.dart';
@@ -11,123 +12,87 @@ import '../utils/thetaApi.dart';
 import '../utils/babbleApi.dart';
 
 class Dashboard extends StatefulWidget {
-  Dashboard({Key key, this.title, this.code}) : super(key: key);
+  Dashboard({Key key, this.title}) : super(key: key);
   final String title;
-  final String code;
   @override
   _DashboardStatus createState() => _DashboardStatus();
 }
 
 class _DashboardStatus extends State<Dashboard> {
-  BabbleChannel channel;
-  ThetaAuth thetaAuth;
-  ThetaUser thetaUser;
   bool isLoading = true;
-  void getDataFromAPI() async {
-    thetaAuth = await ThetaApi().requestAuth(widget.code);
-    if(thetaAuth.status == "SUCCESS"){
-      channel = await BabbleApi().getChannel(thetaAuth.body.userId);
-      thetaUser = await ThetaApi().getUser(thetaAuth.body.userId);
-    }
-    if(channel != null){
-      setState(() {
-        channel = channel;
-        thetaUser = thetaUser;
-        isLoading = false;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (channel == null ){
-      getDataFromAPI();
-      return Scaffold(
+    final auth = Provider.of<Future<ThetaAuth>>(context);
+    final channel = Provider.of<Future<BabbleChannel>>(context);
+    final thetaUser = Provider.of<Future<ThetaUser>>(context);
+    return FutureProvider(
+      create: (_) => auth,
+      child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text("Loading"),
-              CircularProgressIndicator(
-                backgroundColor: Colors.lightBlue,
-              ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  SocialBar()
-                ]
-              )
-            ]
-          )
-        )
-      );
-    }else {
-      return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(thetaUser.body.username),
-              Container(
-                width: 32,
-                height: 32,
-                padding: EdgeInsets.fromLTRB(20.0, 0, 0, 0),
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: NetworkImage(thetaUser.body.avatarUrl)
-                    )
-                )
-              ),
-            ],
-          ),
-          actions: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-              ]
-            ),
-            // IconButton(
-            //   icon: Icon(Icons.settings),
-            //   onPressed: (){},
-            // ),
-          ],
-        ),
-        body: Column(
-          children: <Widget>[
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children:[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          title: (auth != null) ?
+          FutureProvider(
+            create: (_) => thetaUser,
+            child: (thetaUser != null) ? Consumer<ThetaUser>(
+              builder: (_, ThetaUser thetaUser, __) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    AlertConfigCard(config: channel.body.alertConfig, width: 300),
-                    //SocialLinksCard(config: channel.body.alertConfig, width: 300)
+                    Text(thetaUser.body.username),
+                    Container(
+                      width: 32,
+                      height: 32,
+                      padding: EdgeInsets.fromLTRB(20.0, 0, 0, 0),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(thetaUser.body.avatarUrl)
+                          )
+                      )
+                    ),
                   ],
+                );
+              }
+            ): Text(widget.title),
+          ): Text(widget.title),
+        ),
+        body:
+          Column(
+            children: <Widget>[
+              (auth != null) ? FutureProvider(
+                create: (_) => channel,
+                child: (channel != null) ? Consumer<BabbleChannel>(
+                  builder: (_, BabbleChannel babbleChannel, __){
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            AlertConfigCard(config: babbleChannel.body.alertConfig, width: 300),
+                            SocialLinksCard(config: babbleChannel.body.alertConfig, width: 300)
+                          ],
+                        )
+                      ]
+                    );
+                  }
                 )
-              ]
-            ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                SocialBar()
-              ]
-            )
-          ],
-        )
-        );
-    }
+                : Text("Loading"),
+              ) : Text("Loading"),
+                CircularProgressIndicator(
+                  backgroundColor: Colors.lightBlue,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    SocialBar()
+                  ]
+                )
+            ],
+          )
+      )
+    );
   }
 }

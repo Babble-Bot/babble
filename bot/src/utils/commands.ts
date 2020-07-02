@@ -95,7 +95,7 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg('@' + user.username + ' Has started a new Quiz "' + msg.data.quiz.text + '" Good Luck all!', channel);
                 break;
             case (msgType == "raffle" && channelConfig.alertConfig.raffle):
-                console.log(msg.data.raffle.prizes);
+                //console.log(msg.data.raffle.prizes);
                 ThetaApi.sendMsg('@' + user.username + ' Has started a new Raffle "' + msg.data.raffle.text + '" Good Luck all!', channel);
                 break;
             case (msgType == "raffle_winner" && channelConfig.alertConfig.rafflewin):
