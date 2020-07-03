@@ -19,6 +19,12 @@ type ChannelsDB struct {
 			Raffle    bool `json:"raffle"`
 			Rafflewin bool `json:"rafflewin"`
 		} `json:"alertConfig"`
+		SocialLinks struct {
+			Twitter string `json:"twitter"`
+			Twitch  string `json:"twitch"`
+			Youtube string `json:"youtube"`
+			Discord string `json:"discord"`
+		} `json:"socialLinks"`
 	} `json:"channels"`
 }
 
