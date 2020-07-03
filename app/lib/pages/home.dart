@@ -1,6 +1,7 @@
-
-
+import 'package:babble/models/babble/installs.dart';
+import 'package:babble/utils/babbleApi.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../widgets/socialBar.dart';
 import '../widgets/statusBar.dart';
@@ -11,6 +12,7 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final BabbleApi babbleApi = BabbleApi();
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -26,7 +28,15 @@ class MyHomePage extends StatelessWidget {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    StatusBar(),
+                    FutureProvider(
+                        create: (_) => babbleApi.getInstalls(),
+                        child: Consumer<BabbleInstalls>(builder:
+                            (context, BabbleInstalls installs, widget) {
+                          return (installs != null)
+                              ? StatusBar(installs: installs)
+                              : CircularProgressIndicator(
+                                  backgroundColor: Colors.lightBlue);
+                        }))
                   ],
                 )
               ],
@@ -35,39 +45,40 @@ class MyHomePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text('Welcome to Babble'),
-                      Image.asset('assets/babble.png',scale:10,fit: BoxFit.cover,),
-                      RaisedButton(
-                        child: Text('Login With Theta'),
-                        color: Colors.white,
-                        onPressed: () {
-                          launch('https://www.theta.tv/account/grant-app?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&redirect_uri=http://babblechatbot.com/', forceSafariVC: false);
-                        },
-                      ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Welcome to Babble'),
+                    Image.asset(
+                      'assets/babble.png',
+                      scale: 10,
+                      fit: BoxFit.cover,
+                    ),
+                    RaisedButton(
+                      child: Text('Login With Theta'),
+                      color: Colors.white,
+                      onPressed: () {
+                        launch(
+                            'https://www.theta.tv/account/grant-app?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&redirect_uri=http://babblechatbot.com/',
+                            forceSafariVC: false);
+                      },
+                    ),
                   ],
                 )
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [SocialBar(),]
-                    )
-                  ],
-                ),
-              ]
-            )
+            Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                    SocialBar(),
+                  ])
+                ],
+              ),
+            ])
           ],
         ),
       ),
     );
   }
 }
-

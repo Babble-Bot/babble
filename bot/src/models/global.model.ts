@@ -12,6 +12,7 @@ interface Channel {
     prefix: string;
     botName: string;
     alertConfig: AlertConfig;
+    socialLinks: SocialLinks;
 }
 
 interface NumberGame {
@@ -34,6 +35,13 @@ interface AlertConfig{
     quiz: boolean;
     raffle: boolean;
     rafflewin: boolean;
+}
+
+interface SocialLinks{
+    twitter: string;
+    twitch: string;
+    youtube: string;
+    discord: string;
 }
 
 interface TimedMessage{

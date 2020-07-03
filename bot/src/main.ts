@@ -22,6 +22,12 @@ class Babble {
         raffle: false,
         rafflewin: true
     };
+    socialLinks = {
+        twitter: '',
+        twitch: '',
+        youtube: '',
+        discord: '',
+    }
     listener: any = {
         message: (m) => { this.messageHandler(m); },
         presence: function (p) {
@@ -104,6 +110,7 @@ class Babble {
             data => {
                 data.forEach((item) => {
                     let alertConfig = (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig : this.alertDefault);
+                    let socialLinks = (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks : this.socialLinks);
                     let activeNumberGame = (BabbleAip.getNumGameConfig(item.user_id) ? BabbleAip.getNumGameConfig(item.user_id) : {
                         channelId: item.user_id,
                         active: false,
@@ -119,7 +126,8 @@ class Babble {
                         accessToken: item.access_token,
                         prefix: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).prefix : appConfig.defaultPrefix),
                         botName: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).botName : 'Babble'),
-                        alertConfig: alertConfig
+                        alertConfig: alertConfig,
+                        socialLinks: socialLinks
                     };
                     channels.push(channel);
                     numberGames.push(activeNumberGame);

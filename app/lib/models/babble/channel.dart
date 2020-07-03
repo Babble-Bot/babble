@@ -25,13 +25,15 @@ class Body {
   String accessToken;
   String prefix;
   AlertConfig alertConfig;
+  SocialLinks socialLinks;
 
   Body(
       {this.clientId,
       this.userId,
       this.accessToken,
       this.prefix,
-      this.alertConfig});
+      this.alertConfig,
+      this.socialLinks});
 
   Body.fromJson(Map<String, dynamic> json) {
     clientId = json['clientId'];
@@ -40,6 +42,9 @@ class Body {
     prefix = json['prefix'];
     alertConfig = json['alertConfig'] != null
         ? new AlertConfig.fromJson(json['alertConfig'])
+        : null;
+    socialLinks = json['socialLinks'] != null
+        ? new SocialLinks.fromJson(json['socialLinks'])
         : null;
   }
 
@@ -51,6 +56,9 @@ class Body {
     data['prefix'] = this.prefix;
     if (this.alertConfig != null) {
       data['alertConfig'] = this.alertConfig.toJson();
+    }
+    if (this.socialLinks != null) {
+      data['socialLinks'] = this.socialLinks.toJson();
     }
     return data;
   }
@@ -109,6 +117,31 @@ class AlertConfig {
     data['quiz'] = this.quiz;
     data['raffle'] = this.raffle;
     data['rafflewin'] = this.rafflewin;
+    return data;
+  }
+}
+
+class SocialLinks {
+  String twitter;
+  String twitch;
+  String youtube;
+  String discord;
+
+  SocialLinks({this.twitter, this.twitch, this.youtube, this.discord});
+
+  SocialLinks.fromJson(Map<String, dynamic> json) {
+    twitter = json['twitter'];
+    twitch = json['twitch'];
+    youtube = json['youtube'];
+    discord = json['discord'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['twitter'] = this.twitter;
+    data['twitch'] = this.twitch;
+    data['youtube'] = this.youtube;
+    data['discord'] = this.discord;
     return data;
   }
 }
