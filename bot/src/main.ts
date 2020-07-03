@@ -23,10 +23,10 @@ class Babble {
         rafflewin: true
     };
     socialLinks = {
-        twitter: '',
-        twitch: '',
-        youtube: '',
-        discord: '',
+        twitter: "",
+        twitch: "",
+        youtube: "",
+        discord: "",
     }
     listener: any = {
         message: (m) => { this.messageHandler(m); },
