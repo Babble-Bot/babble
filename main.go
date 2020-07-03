@@ -20,11 +20,7 @@ func main() {
 	{
 		api.GET("/channels/:userId", controllers.FindChannel)
 		api.GET("/installs", controllers.GetInstalls)
-		// api.POST("/channel/:userid/*action")
-		// api.POST("/channel/alertconfig/:userId/*config")
-		// api.POST("/channel/sociallinks/:userId/*link")
-		// api.GET("/jokes", authMiddleware(), JokeHandler)
-		// api.POST("/jokes/like/:jokeID", authMiddleware(), LikeJoke)
+		api.POST("/channel/:userId", controllers.UpdateChannel)
 	}
 	// Start the app
 	router.Run(":80")

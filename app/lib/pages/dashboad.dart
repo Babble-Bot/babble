@@ -76,10 +76,10 @@ class Dashboard extends StatelessWidget {
                                                   config:
                                                       channel.body.alertConfig,
                                                   width: 300),
-                                              SocialLinksCard(
-                                                  config:
-                                                      channel.body.socialLinks,
-                                                  width: 300)
+                                              // SocialLinksCard(
+                                              //     config:
+                                              //         channel.body.socialLinks,
+                                              //     width: 300)
                                             ],
                                           )
                                         ])
