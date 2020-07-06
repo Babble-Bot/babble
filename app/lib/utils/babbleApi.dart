@@ -32,9 +32,9 @@ class BabbleApi with ChangeNotifier, DiagnosticableTreeMixin {
   }
 
   Future<BabbleChannel> updateChannel(BabbleChannel updatedChannel) async {
-    var url = 'http://babblechatbot.com/api/theta/channels/' +
+    var url = 'http://babblechatbot.com/api/theta/channel/' +
         updatedChannel.body.userId;
-    var body = updatedChannel.body;
+    var body = json.encode(updatedChannel.body);
     http.Response response = await http.post(url, body: body);
     if (response.statusCode == 200) {
       BabbleChannel channel =

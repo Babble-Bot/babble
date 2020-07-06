@@ -141,36 +141,37 @@ class AlertConfigCard extends StatelessWidget {
         channel.body.alertConfig.all = value;
         break;
       case "hello":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.hello = value;
         break;
       case "donation":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.donation = value;
         break;
       case "follow":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.follow = value;
         break;
       case "gift":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.gift = value;
         break;
       case "sub":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.sub = value;
         break;
       case "giftedsub":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.giftedsub = value;
         break;
       case "level":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.level = value;
         break;
       case "quiz":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.quiz = value;
         break;
       case "raffle":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.raffle = value;
         break;
       case "rafflewin":
-        channel.body.alertConfig.all = value;
+        channel.body.alertConfig.rafflewin = value;
         break;
     }
-    babbleAip.updateChannel(channel);
+    channel = babbleAip.updateChannel(channel) as BabbleChannel;
+    config = channel.body.alertConfig;
   }
 }
