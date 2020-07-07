@@ -24,14 +24,14 @@ func FindChannel(c *gin.Context) {
 	//fmt.Println("Successfully Opened channels.json")
 	defer db.Close()
 	byteValue, _ := ioutil.ReadAll(db)
-	var channelsDB models.channelsDB
+	var channelsDB models.ChannelsDB
 	json.Unmarshal(byteValue, &channelsDB)
-	for i := 0; i < len(channelsDB.channels); i++ {
-		if channelsDB.channels[i].userID == userId {
-			channelsDB.channels[i].accessToken = "xxxxxxxxxxxx"
+	for i := 0; i < len(channelsDB.Channels); i++ {
+		if channelsDB.Channels[i].UserID == userId {
+			channelsDB.Channels[i].AccessToken = "xxxxxxxxxxxx"
 			c.JSON(http.StatusOK, gin.H{
 				"status": http.StatusOK,
-				"body":   channelsDB.channels[i],
+				"body": channelsDB.Channels[i],
 			})
 		}
 	}
@@ -51,18 +51,19 @@ func UpdateChannel(c *gin.Context) {
 	userId := c.Param("userId")
 	reqBody, err := ioutil.ReadAll(c.Request.Body)
 	byteValue, _ := ioutil.ReadAll(db)
-	var channelsDB models.channelsDB
-	var channelReq models.channel
+	var channelsDB models.ChannelsDB
+	var channelReq models.Channel
 	json.Unmarshal(byteValue, &channelsDB)
 	json.Unmarshal(reqBody, &channelReq)
-	for i := 0; i < len(channelsDB.channels); i++ {
-		if channelsDB.channels[i].UserID == userId {
-			channelsDB.channels[i] = channelReq
-			updatedDb, _ := json.Marshal(channelsDB)
+	for i := 0; i < len(channelsDB.Channels); i++ {
+		if channelsDB.Channels[i].UserID == userId {
+			channelsDB.Channels[i] = channelReq
+			updatedDb, _ := json.MarshalIndent(channelsDB, "", " ")
 			ioutil.WriteFile("./db/theta/channels.json", updatedDb, 0644)
+			channelsDB.Channels[i].AccessToken = "xxxxxxxxxxxx"
 			c.JSON(http.StatusOK, gin.H{
 				"status": http.StatusOK,
-				"body":   channelsDB.channels[i],
+				"body":   channelsDB.Channels[i],
 			})
 		}
 	}
@@ -80,9 +81,9 @@ func GetInstalls(c *gin.Context) {
 	//fmt.Println("Successfully Opened channels.json")
 	defer db.Close()
 	byteValue, _ := ioutil.ReadAll(db)
-	var channelsDB models.channelsDB
+	var channelsDB models.ChannelsDB
 	json.Unmarshal(byteValue, &channelsDB)
-	installs := models.installs{theta: len(channelsDB.channels), twitch: 0}
+	installs := models.Installs{Theta: len(channelsDB.Channels), Twitch: 0}
 	c.JSON(http.StatusOK, gin.H{
 		"status": http.StatusOK,
 		"body":   installs,

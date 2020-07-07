@@ -9,25 +9,6 @@ import Games from './games';
 
 class Babble {
     pubnub: any = new PubNub({ subscribeKey: appConfig.subscribeKey });
-    alertDefault = {
-        all: true,
-        hello: true,
-        donation: true,
-        follow: true,
-        gift: true,
-        sub: true,
-        giftedsub: true,
-        level: true,
-        quiz: false,
-        raffle: false,
-        rafflewin: true
-    };
-    socialLinks = {
-        twitter: "",
-        twitch: "",
-        youtube: "",
-        discord: "",
-    }
     listener: any = {
         message: (m) => { this.messageHandler(m); },
         presence: function (p) {
@@ -99,7 +80,7 @@ class Babble {
         setInterval(async () => {
             let hasInstalls = await this.checkInstalsLoop();
             this.init(hasInstalls);
-        }, 5000);
+        }, 10000);
     }
 
     async checkInstalsLoop() {
@@ -109,8 +90,6 @@ class Babble {
         await ThetaApi.getInstalls(
             data => {
                 data.forEach((item) => {
-                    let alertConfig = (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig : this.alertDefault);
-                    let socialLinks = (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks : this.socialLinks);
                     let activeNumberGame = (BabbleAip.getNumGameConfig(item.user_id) ? BabbleAip.getNumGameConfig(item.user_id) : {
                         channelId: item.user_id,
                         active: false,
@@ -126,8 +105,25 @@ class Babble {
                         accessToken: item.access_token,
                         prefix: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).prefix : appConfig.defaultPrefix),
                         botName: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).botName : 'Babble'),
-                        alertConfig: alertConfig,
-                        socialLinks: socialLinks
+                        alertConfig: {
+                            all: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.all : true),
+                            hello: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.hello : true),
+                            donation: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.donation : true),
+                            follow: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.follow : true),
+                            gift: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.gift : true),
+                            sub: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.sub : true),
+                            giftedsub: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.giftedsub : true),
+                            level: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.level : true),
+                            quiz: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.quiz : false),
+                            raffle: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.raffle : false),
+                            rafflewin: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.rafflewin : true)
+                        },
+                        socialLinks: {
+                            twitter: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.twitter : ""),
+                            twitch: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.twitch : ""),
+                            youtube: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.youtube : ""),
+                            discord: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.discord : ""),
+                        }
                     };
                     channels.push(channel);
                     numberGames.push(activeNumberGame);
