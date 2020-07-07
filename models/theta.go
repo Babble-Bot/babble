@@ -1,4 +1,4 @@
-package models
+package thetaModel
 
 type channelsDB struct {
 	channels []channel
@@ -29,9 +29,4 @@ type channel struct {
 		youtube string
 		discord string
 	}
-}
-
-type installs struct {
-	theta  int
-	twitch int
 }
