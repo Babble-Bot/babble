@@ -80,10 +80,11 @@ class Babble {
         setInterval(async () => {
             let hasInstalls = await this.checkInstalsLoop();
             this.init(hasInstalls);
-        }, 10000);
+        }, 5000);
     }
 
     async checkInstalsLoop() {
+        
         let channels = [];
         let numberGames = [];
         appConfig.subscribers.splice(0, appConfig.subscribers.length);
@@ -153,6 +154,7 @@ class Babble {
     }
 
     messageHandler(msgObject) {
+        console.log(msgObject);
         let channelId = msgObject.channel.replace('chat.', ''); // The channel for which the message belongs
         let pubTT = msgObject.timetoken; // Publish timetoken
         let msg = msgObject.message; // The Payload
