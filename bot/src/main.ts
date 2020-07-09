@@ -89,10 +89,8 @@ class Babble {
         appConfig.subscribers.splice(0, appConfig.subscribers.length);
         await ThetaApi.getInstalls(
             data => {
-                data.forEach(async (item) => {
-                    let channelConfig = await BabbleAip.getChannelConfig(item.user_id)
-                    let numberGameConfig = await BabbleAip.getNumGameConfig(item.user_id)
-                    let activeNumberGame = (numberGameConfig ? numberGameConfig : {
+                data.forEach((item) => {
+                    let activeNumberGame = (BabbleAip.getNumGameConfig(item.user_id) ? BabbleAip.getNumGameConfig(item.user_id) : {
                         channelId: item.user_id,
                         active: false,
                         winningNumber: 0,
@@ -105,26 +103,26 @@ class Babble {
                         clientId: item.client_id,
                         userId: item.user_id,
                         accessToken: item.access_token,
-                        prefix: (channelConfig ? channelConfig.prefix : appConfig.defaultPrefix),
-                        botName: (channelConfig ? channelConfig.botName : 'Babble'),
+                        prefix: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).prefix : appConfig.defaultPrefix),
+                        botName: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).botName : 'Babble'),
                         alertConfig: {
-                            all: (channelConfig ? channelConfig.alertConfig.all : true),
-                            hello: (channelConfig ? channelConfig.alertConfig.hello : true),
-                            donation: (channelConfig ? channelConfig.alertConfig.donation : true),
-                            follow: (channelConfig ? channelConfig.alertConfig.follow : true),
-                            gift: (channelConfig ? channelConfig.alertConfig.gift : true),
-                            sub: (channelConfig ? channelConfig.alertConfig.sub : true),
-                            giftedsub: (channelConfig ? channelConfig.alertConfig.giftedsub : true),
-                            level: (channelConfig ? channelConfig.alertConfig.level : true),
-                            quiz: (channelConfig ? channelConfig.alertConfig.quiz : false),
-                            raffle: (channelConfig ? channelConfig.alertConfig.raffle : false),
-                            rafflewin: (channelConfig ? channelConfig.alertConfig.rafflewin : true)
+                            all: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.all : true),
+                            hello: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.hello : true),
+                            donation: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.donation : true),
+                            follow: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.follow : true),
+                            gift: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.gift : true),
+                            sub: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.sub : true),
+                            giftedsub: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.giftedsub : true),
+                            level: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.level : true),
+                            quiz: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.quiz : false),
+                            raffle: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.raffle : false),
+                            rafflewin: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).alertConfig.rafflewin : true)
                         },
                         socialLinks: {
-                            twitter: (channelConfig ? channelConfig.socialLinks.twitter : ""),
-                            twitch: (channelConfig ? channelConfig.socialLinks.twitch : ""),
-                            youtube: (channelConfig ? channelConfig.socialLinks.youtube : ""),
-                            discord: (channelConfig ? channelConfig.socialLinks.discord : ""),
+                            twitter: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.twitter : ""),
+                            twitch: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.twitch : ""),
+                            youtube: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.youtube : ""),
+                            discord: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.discord : ""),
                         }
                     };
                     channels.push(channel);
@@ -154,7 +152,7 @@ class Babble {
         this.pubnub.addListener(this.listener);
     }
 
-    async messageHandler(msgObject) {
+    messageHandler(msgObject) {
         console.log(msgObject);
         let channelId = msgObject.channel.replace('chat.', ''); // The channel for which the message belongs
         let pubTT = msgObject.timetoken; // Publish timetoken
@@ -163,8 +161,8 @@ class Babble {
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
-        let channelConfig = await BabbleAip.getChannelConfig(channelId);
-        let ngChannelConfig = await BabbleAip.getNumGameConfig(channelId);
+        let channelConfig = BabbleAip.getChannelConfig(channelId);
+        let ngChannelConfig = BabbleAip.getNumGameConfig(channelId);
         let onlyNumRegx = /^\d+$/;
 
         switch (true) {

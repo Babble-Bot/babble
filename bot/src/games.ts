@@ -8,8 +8,8 @@ export default class Games {
     /**
      * Number Game Init
      */
-    static async startNumberGame(msg, channel) {
-        let ngChannelConfig = await BabbleAip.getNumGameConfig(channel);
+    static startNumberGame(msg, channel) {
+        let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
         let maxInt: number = Math.floor(Math.random() * 100) + 1; //Default of 100
         switch(msg[1]){
             case "kill":
@@ -45,11 +45,11 @@ export default class Games {
     /**
      * Number Game Manager
      */
-    static async numGameManager(msg, usr, channel) {
+    static numGameManager(msg, usr, channel) {
         //TODO: auto send gift able item ?
         //TODO: set up limmit trys
         let guess: number = parseInt(msg);
-        let ngChannelConfig = await BabbleAip.getNumGameConfig(channel);
+        let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
         let ngPlayer = {
             userId: usr.id,
             lastTry: guess,
