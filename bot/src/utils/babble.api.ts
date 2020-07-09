@@ -35,7 +35,7 @@ export default class BabbleApi {
         let rawData = fs.readFileSync(path.join(appDir,'../../../../db/theta/activeNumberGames.json'));
         let NumberGames = JSON.parse(rawData.toString());
         if(numberGames !== NumberGames.channels){
-            fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify({channels: numberGames}, null, 2));
+            fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify(numberGames, null, 2));
         }
     }
 
@@ -44,10 +44,10 @@ export default class BabbleApi {
         let NumberGames = JSON.parse(rawData.toString());
         NumberGames.channels.forEach((channel, i) => {
             if(channel.channelId === channelId) {
-                NumberGames.channels[i] = updatedNumberGameConfig;
+                channel = updatedNumberGameConfig;
             }
         });
-        fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify({channels: NumberGames}, null, 2));
+        fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify(NumberGames, null, 2));
     }
 
     static getChannelConfig(channelId: string):Channel {
