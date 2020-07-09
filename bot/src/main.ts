@@ -153,7 +153,7 @@ class Babble {
     }
 
     messageHandler(msgObject) {
-        console.log(msgObject);
+        //console.log(msgObject);
         let channelId = msgObject.channel.replace('chat.', ''); // The channel for which the message belongs
         let pubTT = msgObject.timetoken; // Publish timetoken
         let msg = msgObject.message; // The Payload
