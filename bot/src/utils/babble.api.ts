@@ -35,7 +35,7 @@ export default class BabbleApi {
         let rawData = fs.readFileSync(path.join(appDir,'../../../../db/theta/activeNumberGames.json'));
         let NumberGames = JSON.parse(rawData.toString());
         if(numberGames !== NumberGames.channels){
-            fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify(numberGames, null, 2));
+            fs.writeFileSync(path.join(appDir, '../../../../db/theta/activeNumberGames.json'), JSON.stringify({channels:numberGames}, null, 2));
         }
     }
 
