@@ -8,12 +8,12 @@ export default class Games {
     /**
      * Number Game Init
      */
-    static startNumberGame(msg, channel) {
-        let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
+    static async startNumberGame(msg, channel) {
+        let ngChannelConfig = await BabbleAip.getNumGameConfig(channel);
         let maxInt: number = Math.floor(Math.random() * 100) + 1; //Default of 100
         switch(msg[1]){
             case "kill":
-                ngChannelConfig = {channelId:channel, active: false, winningNumber: 0, players: {}, lastGame: ngChannelConfig.lastGame};
+                ngChannelConfig = {channelId:channel, active: false, winningNumber: 0, players: [], lastGame: ngChannelConfig.lastGame};
                 BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
                 ThetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
                 break;
@@ -45,16 +45,16 @@ export default class Games {
     /**
      * Number Game Manager
      */
-    static numGameManager(msg, usr, channel) {
+    static async numGameManager(msg, usr, channel) {
         //TODO: auto send gift able item ?
         //TODO: set up limmit trys
         let guess: number = parseInt(msg);
-        let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
-        let ngPlayer =  ((ngChannelConfig.players[usr.id]) ? ngChannelConfig.players[usr.id] : ngChannelConfig.players[usr.id] = {
+        let ngChannelConfig = await BabbleAip.getNumGameConfig(channel);
+        let ngPlayer = {
             userId: usr.id,
             lastTry: guess,
             tres: []
-        });
+        };
         ngPlayer.tres.push(guess);
         if(guess == (ngPlayer.lastTry + 1) || guess == (ngPlayer.lastTry - 1)){
             ThetaApi.sendMsg("@" + usr.username + " Sorry but you guess's can not be consecutive ie. 1 2 3 or 3 2 1", channel);
@@ -66,7 +66,7 @@ export default class Games {
             ThetaApi.sendMsg("Congrats !! @" + usr.username + " Your the winner with: " + ngChannelConfig.winningNumber + ":flex:", channel);
             ngChannelConfig.winningNumber = 0;
             ngChannelConfig.active = false;
-            ngChannelConfig.players = {};
+            ngChannelConfig.players = [];
             BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
         }
     }

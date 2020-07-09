@@ -9,7 +9,7 @@ import * as appConfig from '../config.json';
 export default class ThetaApi {
     static async getUpTime(channel: any) {
         let channelConfig = BabbleAip.getChannelConfig(channel);
-        let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId
+        let url = "https://api.theta.tv/v1/channel/" + (await channelConfig).userId
         const response = await fetch(url);
         const json = await response.json();
         const initTS = parseInt(json.body.start_time);
@@ -65,20 +65,20 @@ export default class ThetaApi {
         return json.body;
     }
 
-    static sendMsg(msg, channel) {
+    static async sendMsg(msg, channel) {
         let channelConfig = BabbleAip.getChannelConfig(channel);
         let body = {
             "type": "chat_message",
             "message": msg,
-            "display_name": channelConfig.botName,
+            "display_name": (await channelConfig).botName,
             "intl": false
         };
-        let url = "https://api.theta.tv/v1/channel/" + channelConfig.userId + "/channel_action?client_id=" + appConfig.clientId + "&client_secret=" + appConfig.clientSecret;
+        let url = "https://api.theta.tv/v1/channel/" + (await channelConfig).userId + "/channel_action?client_id=" + appConfig.clientId + "&client_secret=" + appConfig.clientSecret;
         fetch(url, {
             method: "POST",
             body: JSON.stringify(body),
             headers: {
-                "Authorization": "Bearer " + channelConfig.accessToken,
+                "Authorization": "Bearer " + (await channelConfig).accessToken,
                 "Content-Type": "application/json"
             },
         });

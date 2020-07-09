@@ -19,6 +19,7 @@ func main() {
 	api := router.Group("/api/theta")
 	{
 		api.GET("/channels/:userId", controllers.FindChannel)
+		api.GET("/number-games/:channelId", controllers.FindNumberGameConfig)
 		api.GET("/installs", controllers.GetInstalls)
 		api.POST("/channel/:userId", controllers.UpdateChannel)
 	}

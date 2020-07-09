@@ -26,14 +26,14 @@ class Body {
   Body({this.theta, this.twitch});
 
   Body.fromJson(Map<String, dynamic> json) {
-    theta = json['Theta'];
-    twitch = json['Twitch'];
+    theta = json['theta'];
+    twitch = json['twitch'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Theta'] = this.theta;
-    data['Twitch'] = this.twitch;
+    data['theta'] = this.theta;
+    data['twitch'] = this.twitch;
     return data;
   }
 }

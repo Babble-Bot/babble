@@ -19,7 +19,7 @@ interface NumberGame {
     channelId: string;
     active: boolean;
     winningNumber: number,
-    players: Players,
+    players: Players[],
     lastGame: LastGame;
 }
 

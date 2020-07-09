@@ -52,48 +52,45 @@ class Dashboard extends StatelessWidget {
                           }))
                       : Text("Dashboard");
                 })),
-            body: Center(
-              child: Column(
-                children: <Widget>[
-                  Consumer<ThetaAuth>(
-                      builder: (context, ThetaAuth auth, widget) {
-                    return (auth != null)
-                        ? FutureProvider(
-                            create: (_) =>
-                                babbleApi.getChannel(auth.body.userId),
-                            child: Consumer<BabbleChannel>(builder:
-                                (context, BabbleChannel channel, widget) {
-                              return (channel != null)
-                                  ? Column(
+            body: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              child: Center(
+                child: Consumer<ThetaAuth>(
+                    builder: (context, ThetaAuth auth, widget) {
+                  return (auth != null)
+                      ? FutureProvider(
+                          create: (_) => babbleApi.getChannel(auth.body.userId),
+                          child: Consumer<BabbleChannel>(builder:
+                              (context, BabbleChannel channel, widget) {
+                            return (channel != null)
+                                ? Column(children: [
+                                    Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                          MainAxisAlignment.spaceAround,
                                       children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
-                                            children: [
-                                              AlertConfigCard(
-                                                  config:
-                                                      channel.body.alertConfig,
-                                                  channel: channel,
-                                                  width: 300),
-                                              // SocialLinksCard(
-                                              //     config:
-                                              //         channel.body.socialLinks,
-                                              //     width: 300)
-                                            ],
-                                          )
-                                        ])
-                                  : CircularProgressIndicator(
-                                      backgroundColor: Colors.lightBlue);
-                            }))
-                        : CircularProgressIndicator(
-                            backgroundColor: Colors.lightBlue);
-                  }),
-                  Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[SocialBar()])
-                ],
+                                        AlertConfigCard(
+                                            config: channel.body.alertConfig,
+                                            channel: channel,
+                                            width: 300),
+                                        SocialLinksCard(
+                                            config: channel.body.socialLinks,
+                                            width: 300)
+                                      ],
+                                    ),
+                                    SocialBar(),
+                                  ])
+                                : Column(children: <Widget>[
+                                    CircularProgressIndicator(
+                                        backgroundColor: Colors.lightBlue),
+                                    SocialBar()
+                                  ]);
+                          }))
+                      : Column(children: <Widget>[
+                          CircularProgressIndicator(
+                              backgroundColor: Colors.lightBlue),
+                          SocialBar()
+                        ]);
+                }),
               ),
             )));
   }

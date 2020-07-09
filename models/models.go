@@ -1,10 +1,14 @@
 package models
 
 type ChannelsDB struct {
-	Channels []Channel `json:"channels"`
+	Channels []Channels `json:"channels"`
 }
 
-type Channel struct {
+type NumberGameDB struct {
+	Channels []NumberGameConfig `json:channels`
+}
+
+type Channels struct {
 	ClientID    string `json:"clientId"`
 	UserID      string `json:"userId"`
 	AccessToken string `json:"accessToken"`
@@ -22,13 +26,29 @@ type Channel struct {
 		Quiz      bool `json:"quiz"`
 		Raffle    bool `json:"raffle"`
 		RaffleWin bool `json:"rafflewin"`
-	} `json:"alertConfig"`
+	} 				   `json:"alertConfig"`
 	SocialLinks struct {
 		Twitter string `json:"twitter"`
 		Twitch  string `json:"twitch"`
 		Youtube string `json:"youtube"`
 		Discord string `json:"discord"`
-	} `json:"socialLinks"`
+	} 				   `json:"socialLinks"`
+}
+
+type NumberGameConfig struct {
+	ChannelId   	string 			`json:"channelId"`
+	Active			bool 			`json:"active"`
+	WinningNumber	int 			`json:"winningNumber"`
+	Players			[]NGPlayers 	`json:"players"`
+	LastGame 		struct{
+		MaxInt		int				`json:"maxInt"`
+	} 								`json:"lastGame"`
+}
+
+type NGPlayers struct {
+	UserId	string	`json:"userId"`
+	LastTry	string	`json:"lastTry"`
+	Tres	[]int	`json"tres"`
 }
 
 type Installs struct {

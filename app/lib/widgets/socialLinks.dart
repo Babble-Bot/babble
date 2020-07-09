@@ -4,6 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SocialLinksCard extends StatelessWidget {
   SocialLinksCard({@required this.config, this.height, this.width});
+  final _formKey = GlobalKey<FormState>();
   final double height;
   final double width;
   SocialLinks config;
@@ -11,71 +12,67 @@ class SocialLinksCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
-      child: Container(
-        width: width,
-        height: height,
-        margin: EdgeInsets.all(20),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  // Icon(Icons.notifications_active, color: Colors.lightBlue),
+        elevation: 5,
+        child: Container(
+          width: width,
+          height: height,
+          margin: EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
                   Text("Social Links"),
-                ],
-              ),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FaIcon(FontAwesomeIcons.twitter),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Twitter',
-                      ),
-                    )
-                  ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FaIcon(FontAwesomeIcons.twitch),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Twitch',
-                      ),
-                    )
-                  ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FaIcon(FontAwesomeIcons.youtube),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'YouTube',
-                      ),
-                    )
-                  ]),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FaIcon(FontAwesomeIcons.discord),
-                    TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Discord',
-                      ),
-                    )
-                  ])
-            ]),
-      ),
-    );
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          icon: FaIcon(FontAwesomeIcons.twitter,
+                              color: Colors.lightBlue),
+                          hintText: 'Twitter',
+                        ),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          icon: FaIcon(FontAwesomeIcons.twitch,
+                              color: Color.fromARGB(255, 169, 112, 255)),
+                          hintText: 'Twitch',
+                        ),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          icon: FaIcon(FontAwesomeIcons.youtube,
+                              color: Colors.red),
+                          hintText: 'YouTube',
+                        ),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          icon: FaIcon(FontAwesomeIcons.discord,
+                              color: Color.fromARGB(255, 114, 137, 218)),
+                          hintText: 'Discord',
+                        ),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          // Validate will return true if the form is valid, or false if
+                          // the form is invalid.
+                          if (_formKey.currentState.validate()) {
+                            _formKey.currentState.save();
+                          }
+                        },
+                        child: Text('Submit'),
+                      )),
+                ]),
+          ),
+        ));
   }
 }
