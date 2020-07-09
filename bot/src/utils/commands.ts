@@ -64,11 +64,11 @@ export default class BabbleCMD {
         }
     }
 
-    static statusHandler(msg, channel) {
+    static async statusHandler(msg, channel) {
         let msgText = msg.data.text;
         let msgType = msg.type;
         let user = msg.data.user;
-        let channelConfig = BabbleAip.getChannelConfig(channel);
+        let channelConfig = await BabbleAip.getChannelConfig(channel);
         switch (true) {
             case (msgType == "hello_message" && channelConfig.alertConfig.hello):
                 ThetaApi.sendMsg("Hello @" + user.username + " thanks for coming by, if you like this channel please follow!", channel);
@@ -109,8 +109,8 @@ export default class BabbleCMD {
         }
     }
 
-    static alertConfigManager(msg, channel) {
-        const channelConfig = BabbleAip.getChannelConfig(channel);
+    static async alertConfigManager(msg, channel) {
+        const channelConfig = await BabbleAip.getChannelConfig(channel);
         const types = ["all", "hello", "donation", "follow", "gift", "sub", "giftedsub", "level", "quiz", "raffle", "rafflewin"];
         const type = msg[1];
         const conf = msg[2];
