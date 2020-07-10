@@ -80,7 +80,7 @@ class Babble {
         setInterval(async () => {
             let hasInstalls = await this.checkInstalsLoop();
             this.init(hasInstalls);
-        }, 5000);
+        }, 30000);
     }
 
     async checkInstalsLoop() {
@@ -163,9 +163,9 @@ class Babble {
         let channelConfig = BabbleAip.getChannelConfig(channelId);
         let ngChannelConfig = BabbleAip.getNumGameConfig(channelId);
         let onlyNumRegx = /^\d+$/;
-        if(channelId == "usrxhgay62cewzpiymn") {
+        //if(channelId == "usrxhgay62cewzpiymn") {
             console.log(msgObject);
-        }
+        //}
         switch (true) {
             case msgType.includes("chat_message"):
                 if (msgText) {
