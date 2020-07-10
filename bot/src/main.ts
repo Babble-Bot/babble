@@ -164,7 +164,7 @@ class Babble {
         let ngChannelConfig = BabbleAip.getNumGameConfig(channelId);
         let onlyNumRegx = /^\d+$/;
         //if(channelId == "usrxhgay62cewzpiymn") {
-            console.log(msgObject);
+        //    console.log(msgObject);
         //}
         switch (true) {
             case msgType.includes("chat_message"):
