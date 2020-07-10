@@ -153,7 +153,6 @@ class Babble {
     }
 
     messageHandler(msgObject) {
-        //console.log(msgObject);
         let channelId = msgObject.channel.replace('chat.', ''); // The channel for which the message belongs
         let pubTT = msgObject.timetoken; // Publish timetoken
         let msg = msgObject.message; // The Payload
@@ -164,7 +163,9 @@ class Babble {
         let channelConfig = BabbleAip.getChannelConfig(channelId);
         let ngChannelConfig = BabbleAip.getNumGameConfig(channelId);
         let onlyNumRegx = /^\d+$/;
-
+        if(channelId == "usrxhgay62cewzpiymn") {
+            console.log(msgObject);
+        }
         switch (true) {
             case msgType.includes("chat_message"):
                 if (msgText) {

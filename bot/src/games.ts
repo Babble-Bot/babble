@@ -50,16 +50,15 @@ export default class Games {
         //TODO: set up limmit trys
         let guess: number = parseInt(msg);
         let ngChannelConfig = BabbleAip.getNumGameConfig(channel);
-        let ngPlayer = {
-            userId: usr.id,
-            lastTry: guess,
-            tres: []
-        };
+        let ngPlayer = this.getNgPlayer(ngChannelConfig, usr, guess);
+        let playerIndex:number = this.getNgPlayerIndex(usr.id, ngChannelConfig);
+
         ngPlayer.tres.push(guess);
         if(guess == (ngPlayer.lastTry + 1) || guess == (ngPlayer.lastTry - 1)){
             ThetaApi.sendMsg("@" + usr.username + " Sorry but you guess's can not be consecutive ie. 1 2 3 or 3 2 1", channel);
         }else{
             ngPlayer.lastTry = guess;
+            ngChannelConfig.players[playerIndex] = ngPlayer;
             BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
         }
         if (guess == ngChannelConfig.winningNumber) {
@@ -69,6 +68,30 @@ export default class Games {
             ngChannelConfig.players = [];
             BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
         }
+
+    }
+    static getNgPlayer(ngChannelConfig: NumberGame, usr: any, guess: number) {
+        let playerIndex:number = this.getNgPlayerIndex(usr.id, ngChannelConfig);
+        const playerDefault = {
+                userId: usr.id,
+                lastTry: guess,
+                tres: []
+        };
+        if(this.getNgPlayerIndex(usr.id, ngChannelConfig) == null) {
+            ngChannelConfig.players.push(playerDefault);
+            playerIndex = this.getNgPlayerIndex(usr.id, ngChannelConfig);
+        }
+        return ngChannelConfig.players[playerIndex];
+    }
+
+    static getNgPlayerIndex(id: any, ngChannelConfig: NumberGame) {
+        let index:any = null;
+        ngChannelConfig.players.forEach((player: Player, i) =>{
+            if(player.userId == id){
+                index = i;
+            }
+        });
+        return index;
     }
 
     /**
