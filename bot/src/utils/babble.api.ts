@@ -27,7 +27,7 @@ export default class BabbleApi {
         });
         return numberGameConfig;
     }
-
+    
     static updateChannelsDB(channels: any) {
         let rawData = fs.readFileSync(path.join(appDir,'../../../../db/theta/channels.json'));
         let channelDb = JSON.parse(rawData.toString());
