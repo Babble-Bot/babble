@@ -1,3 +1,7 @@
+import 'package:babble/models/babble/installs.dart';
+import 'package:babble/widgets/botConfig.dart';
+import 'package:babble/widgets/channelQuickLinks.dart';
+import 'package:babble/widgets/statusBar.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +22,7 @@ class Dashboard extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThetaApi thetaApi = ThetaApi();
     final BabbleApi babbleApi = BabbleApi();
+    var thetaUser;
     return FutureProvider(
         create: (_) => thetaApi.requestAuth(code),
         child: Scaffold(
@@ -30,6 +35,7 @@ class Dashboard extends StatelessWidget {
                           create: (_) => thetaApi.getUser(auth.body.userId),
                           child: Consumer<ThetaUser>(
                               builder: (_, ThetaUser thetaUser, __) {
+                            thetaUser = thetaUser;
                             return (thetaUser != null)
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -38,11 +44,11 @@ class Dashboard extends StatelessWidget {
                                       Container(
                                           width: 32,
                                           height: 32,
-                                          padding: EdgeInsets.fromLTRB(
-                                              20.0, 0, 0, 0),
                                           decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               image: DecorationImage(
+                                                  alignment:
+                                                      Alignment.centerRight,
                                                   fit: BoxFit.fill,
                                                   image: NetworkImage(thetaUser
                                                       .body.avatarUrl)))),
@@ -52,46 +58,82 @@ class Dashboard extends StatelessWidget {
                           }))
                       : Text("Dashboard");
                 })),
-            body: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Center(
-                child: Consumer<ThetaAuth>(
-                    builder: (context, ThetaAuth auth, widget) {
-                  return (auth != null)
-                      ? FutureProvider(
-                          create: (_) => babbleApi.getChannel(auth.body.userId),
-                          child: Consumer<BabbleChannel>(builder:
-                              (context, BabbleChannel channel, widget) {
-                            return (channel != null)
-                                ? Column(children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        AlertConfigCard(
-                                            config: channel.body.alertConfig,
-                                            channel: channel,
-                                            width: 300),
-                                        SocialLinksCard(
-                                            config: channel.body.socialLinks,
-                                            width: 300)
-                                      ],
-                                    ),
-                                    SocialBar(),
-                                  ])
-                                : Column(children: <Widget>[
-                                    CircularProgressIndicator(
-                                        backgroundColor: Colors.lightBlue),
-                                    SocialBar()
-                                  ]);
-                          }))
-                      : Column(children: <Widget>[
-                          CircularProgressIndicator(
-                              backgroundColor: Colors.lightBlue),
-                          SocialBar()
-                        ]);
-                }),
-              ),
-            )));
+            body: SingleChildScrollView(
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    child: Center(
+                        child: Column(children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              FutureProvider(
+                                  create: (_) => babbleApi.getInstalls(),
+                                  child: Consumer<BabbleInstalls>(builder:
+                                      (context, BabbleInstalls installs,
+                                          widget) {
+                                    return (installs != null)
+                                        ? StatusBar(installs: installs)
+                                        : CircularProgressIndicator(
+                                            backgroundColor: Colors.lightBlue);
+                                  }))
+                            ],
+                          )
+                        ],
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Consumer<ThetaAuth>(
+                                builder: (context, ThetaAuth auth, widget) {
+                              return (auth != null)
+                                  ? FutureProvider(
+                                      create: (_) => babbleApi
+                                          .getChannel(auth.body.userId),
+                                      child: Consumer<BabbleChannel>(builder:
+                                          (context, BabbleChannel channel,
+                                              widget) {
+                                        return (channel != null)
+                                            ? Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                    // ChannelQuickLinks(
+                                                    //     channel: channel,
+                                                    //     userName: thetaUser
+                                                    //         .body.username,
+                                                    //     width: 300),
+                                                    BotConfigCard(
+                                                        channel: channel,
+                                                        width: 300),
+                                                    AlertConfigCard(
+                                                        config: channel
+                                                            .body.alertConfig,
+                                                        channel: channel,
+                                                        width: 300),
+                                                    SocialLinksCard(
+                                                        config: channel
+                                                            .body.socialLinks,
+                                                        channel: channel,
+                                                        width: 300),
+                                                    SocialBar()
+                                                  ])
+                                            : Column(children: <Widget>[
+                                                CircularProgressIndicator(
+                                                    backgroundColor:
+                                                        Colors.lightBlue),
+                                                SocialBar()
+                                              ]);
+                                      }))
+                                  : Column(children: <Widget>[
+                                      CircularProgressIndicator(
+                                          backgroundColor: Colors.lightBlue),
+                                      SocialBar()
+                                    ]);
+                            })
+                          ])
+                    ]))))));
   }
 }

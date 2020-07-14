@@ -24,6 +24,7 @@ class Body {
   String userId;
   String accessToken;
   String prefix;
+  String botName;
   AlertConfig alertConfig;
   SocialLinks socialLinks;
 
@@ -32,6 +33,7 @@ class Body {
       this.userId,
       this.accessToken,
       this.prefix,
+      this.botName,
       this.alertConfig,
       this.socialLinks});
 
@@ -40,6 +42,7 @@ class Body {
     userId = json['userId'];
     accessToken = json['accessToken'];
     prefix = json['prefix'];
+    botName = json['botName'];
     alertConfig = json['alertConfig'] != null
         ? new AlertConfig.fromJson(json['alertConfig'])
         : null;
@@ -54,6 +57,7 @@ class Body {
     data['userId'] = this.userId;
     data['accessToken'] = this.accessToken;
     data['prefix'] = this.prefix;
+    data['botName'] = this.botName;
     if (this.alertConfig != null) {
       data['alertConfig'] = this.alertConfig.toJson();
     }

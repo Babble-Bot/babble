@@ -1,21 +1,64 @@
+import 'package:babble/utils/babbleApi.dart';
 import 'package:flutter/material.dart';
 import '../models/babble/channel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SocialLinksCard extends StatelessWidget {
-  SocialLinksCard({@required this.config, this.height, this.width});
-  final _formKey = GlobalKey<FormState>();
-  final double height;
-  final double width;
+class SocialLinksCard extends StatefulWidget {
+  SocialLinksCard(
+      {Key key,
+      @required this.config,
+      @required this.channel,
+      this.height,
+      this.width})
+      : super(key: key);
+  double height;
+  double width;
   SocialLinks config;
+  BabbleChannel channel;
+
+  @override
+  _SocialLinksCard createState() =>
+      _SocialLinksCard(config, channel, height, width);
+}
+
+class _SocialLinksCard extends State<SocialLinksCard> {
+  _SocialLinksCard(config, channel, height, width);
+  final _formKey = GlobalKey<FormState>();
+  Map<String, dynamic> formData = {
+    'twitter': "",
+    'twitch': "",
+    'youtube': "",
+    'discord': ""
+  };
+
+  @override
+  void initState() {
+    super.initState();
+    formData['twitter'] = widget.config.twitter;
+    formData['twitch'] = widget.config.twitch;
+    formData['youtube'] = widget.config.youtube;
+    formData['discord'] = widget.config.discord;
+  }
+
+  Future<void> updateSocialLinks() async {
+    BabbleApi babbleAip = BabbleApi();
+    widget.channel.body.socialLinks.twitter = formData['twitter'];
+    widget.channel.body.socialLinks.twitch = formData['twitch'];
+    widget.channel.body.socialLinks.youtube = formData['youtube'];
+    widget.channel.body.socialLinks.discord = formData['discord'];
+    widget.channel = await babbleAip.updateChannel(widget.channel);
+    setState(() {
+      widget.config = widget.channel.body.socialLinks;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
         elevation: 5,
         child: Container(
-          width: width,
-          height: height,
+          width: widget.width,
+          height: widget.height,
           margin: EdgeInsets.all(20),
           child: Form(
             key: _formKey,
@@ -23,56 +66,81 @@ class SocialLinksCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text("Social Links"),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          icon: FaIcon(FontAwesomeIcons.twitter,
-                              color: Colors.lightBlue),
-                          hintText: 'Twitter',
-                        ),
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          icon: FaIcon(FontAwesomeIcons.twitch,
-                              color: Color.fromARGB(255, 169, 112, 255)),
-                          hintText: 'Twitch',
-                        ),
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          icon: FaIcon(FontAwesomeIcons.youtube,
-                              color: Colors.red),
-                          hintText: 'YouTube',
-                        ),
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          icon: FaIcon(FontAwesomeIcons.discord,
-                              color: Color.fromARGB(255, 114, 137, 218)),
-                          hintText: 'Discord',
-                        ),
-                      )),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          // Validate will return true if the form is valid, or false if
-                          // the form is invalid.
-                          if (_formKey.currentState.validate()) {
-                            _formKey.currentState.save();
-                          }
-                        },
-                        child: Text('Submit'),
-                      )),
+                  _twitterInput(),
+                  _twitchInput(),
+                  _youtubeInput(),
+                  _discordInput(),
+                  _submitButton(),
                 ]),
           ),
+        ));
+  }
+
+  Widget _twitterInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: FaIcon(FontAwesomeIcons.twitter, color: Colors.lightBlue),
+              labelText: 'Twitter',
+              hintText: widget.config.twitter),
+          onSaved: (val) => setState(() => formData['twitter'] = val),
+        ));
+  }
+
+  Widget _twitchInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: FaIcon(FontAwesomeIcons.twitch,
+                  color: Color.fromARGB(255, 169, 112, 255)),
+              labelText: 'Twitch',
+              hintText: widget.config.twitch),
+          onSaved: (val) => setState(() => formData['twitch'] = val),
+        ));
+  }
+
+  Widget _youtubeInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: FaIcon(FontAwesomeIcons.youtube, color: Colors.red),
+              labelText: 'YouTube',
+              hintText: widget.config.youtube),
+          onSaved: (val) => setState(() => formData['youtube'] = val),
+        ));
+  }
+
+  Widget _discordInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: FaIcon(FontAwesomeIcons.discord,
+                  color: Color.fromARGB(255, 114, 137, 218)),
+              labelText: 'Discord',
+              hintText: widget.config.discord),
+          onSaved: (val) => setState(() => formData['discord'] = val),
+        ));
+  }
+
+  Widget _submitButton() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: RaisedButton(
+          color: Colors.blue,
+          textColor: Colors.white,
+          onPressed: () {
+            // Validate will return true if the form is valid, or false if
+            // the form is invalid.
+            if (_formKey.currentState.validate()) {
+              _formKey.currentState.save();
+              updateSocialLinks();
+            }
+          },
+          child: Text('Update'),
         ));
   }
 }

@@ -2,21 +2,34 @@ import 'package:babble/utils/babbleApi.dart';
 import 'package:flutter/material.dart';
 import '../models/babble/channel.dart';
 
-class AlertConfigCard extends StatelessWidget {
+class AlertConfigCard extends StatefulWidget {
   AlertConfigCard(
-      {@required this.config, @required this.channel, this.height, this.width});
+      {Key key,
+      @required this.config,
+      @required this.channel,
+      this.height,
+      this.width})
+      : super(key: key);
   double height;
   double width;
   AlertConfig config;
   BabbleChannel channel;
 
   @override
+  _AlertConfigCard createState() =>
+      _AlertConfigCard(config, channel, height, width);
+}
+
+class _AlertConfigCard extends State<AlertConfigCard> {
+  _AlertConfigCard(config, channel, height, width);
+
+  @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 5,
       child: Container(
-        width: width,
-        height: height,
+        width: widget.width,
+        height: widget.height,
         margin: EdgeInsets.all(20),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <
             Widget>[
@@ -32,7 +45,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("All:"),
                 Switch(
-                  value: config.all,
+                  value: widget.config.all,
                   onChanged: (bool value) => updateAlertConfig(value, "all"),
                 )
               ]),
@@ -41,7 +54,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Hello:"),
                 Switch(
-                  value: config.hello,
+                  value: widget.config.hello,
                   onChanged: (bool value) => updateAlertConfig(value, "hello"),
                 )
               ]),
@@ -50,7 +63,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Donation:"),
                 Switch(
-                  value: config.donation,
+                  value: widget.config.donation,
                   onChanged: (bool value) =>
                       updateAlertConfig(value, "donation"),
                 )
@@ -60,7 +73,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Follo:"),
                 Switch(
-                  value: config.follow,
+                  value: widget.config.follow,
                   onChanged: (bool value) => updateAlertConfig(value, "follow"),
                 )
               ]),
@@ -69,7 +82,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Gift:"),
                 Switch(
-                  value: config.gift,
+                  value: widget.config.gift,
                   onChanged: (bool value) => updateAlertConfig(value, "gift"),
                 )
               ]),
@@ -78,7 +91,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Subs:"),
                 Switch(
-                  value: config.sub,
+                  value: widget.config.sub,
                   onChanged: (bool value) => updateAlertConfig(value, "sub"),
                 )
               ]),
@@ -87,7 +100,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Gifted Subs:"),
                 Switch(
-                  value: config.giftedsub,
+                  value: widget.config.giftedsub,
                   onChanged: (bool value) =>
                       updateAlertConfig(value, "giftedsub"),
                 )
@@ -97,7 +110,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Level:"),
                 Switch(
-                  value: config.level,
+                  value: widget.config.level,
                   onChanged: (bool value) => updateAlertConfig(value, "level"),
                 )
               ]),
@@ -106,7 +119,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Quiz:"),
                 Switch(
-                  value: config.quiz,
+                  value: widget.config.quiz,
                   onChanged: (bool value) => updateAlertConfig(value, "quiz"),
                 )
               ]),
@@ -115,7 +128,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Raffle:"),
                 Switch(
-                  value: config.raffle,
+                  value: widget.config.raffle,
                   onChanged: (bool value) => updateAlertConfig(value, "raffle"),
                 )
               ]),
@@ -124,7 +137,7 @@ class AlertConfigCard extends StatelessWidget {
               children: <Widget>[
                 Text("Win Raffle:"),
                 Switch(
-                  value: config.rafflewin,
+                  value: widget.config.rafflewin,
                   onChanged: (bool value) =>
                       updateAlertConfig(value, "rafflewin"),
                 )
@@ -134,44 +147,46 @@ class AlertConfigCard extends StatelessWidget {
     );
   }
 
-  void updateAlertConfig(bool value, String key) {
+  Future<void> updateAlertConfig(bool value, String key) async {
     BabbleApi babbleAip = BabbleApi();
     switch (key) {
       case "all":
-        channel.body.alertConfig.all = value;
+        widget.channel.body.alertConfig.all = value;
         break;
       case "hello":
-        channel.body.alertConfig.hello = value;
+        widget.channel.body.alertConfig.hello = value;
         break;
       case "donation":
-        channel.body.alertConfig.donation = value;
+        widget.channel.body.alertConfig.donation = value;
         break;
       case "follow":
-        channel.body.alertConfig.follow = value;
+        widget.channel.body.alertConfig.follow = value;
         break;
       case "gift":
-        channel.body.alertConfig.gift = value;
+        widget.channel.body.alertConfig.gift = value;
         break;
       case "sub":
-        channel.body.alertConfig.sub = value;
+        widget.channel.body.alertConfig.sub = value;
         break;
       case "giftedsub":
-        channel.body.alertConfig.giftedsub = value;
+        widget.channel.body.alertConfig.giftedsub = value;
         break;
       case "level":
-        channel.body.alertConfig.level = value;
+        widget.channel.body.alertConfig.level = value;
         break;
       case "quiz":
-        channel.body.alertConfig.quiz = value;
+        widget.channel.body.alertConfig.quiz = value;
         break;
       case "raffle":
-        channel.body.alertConfig.raffle = value;
+        widget.channel.body.alertConfig.raffle = value;
         break;
       case "rafflewin":
-        channel.body.alertConfig.rafflewin = value;
+        widget.channel.body.alertConfig.rafflewin = value;
         break;
     }
-    channel = babbleAip.updateChannel(channel) as BabbleChannel;
-    config = channel.body.alertConfig;
+    widget.channel = await babbleAip.updateChannel(widget.channel);
+    setState(() {
+      widget.config = widget.channel.body.alertConfig;
+    });
   }
 }

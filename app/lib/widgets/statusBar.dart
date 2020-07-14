@@ -11,7 +11,7 @@ class StatusBar extends StatelessWidget {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       Column(children: [
         Row(children: [
-          Text("Status"),
+          Text("Installs"),
         ]),
         Row(children: [
           Column(
