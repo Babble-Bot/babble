@@ -16,7 +16,8 @@
 			"bot": true
 		},
 		"cSpell.words": [
-			"gonic"
+			"gonic",
+			"pubnub"
 		]
 	}
 }

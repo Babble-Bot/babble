@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 import BabbleAip from './babble.api';
 import Helpers from './helpers';
 import * as appConfig from '../config.json';
+import { promises } from 'dns';
 
 
 export default class ThetaApi {
@@ -59,7 +60,7 @@ export default class ThetaApi {
         callback(json.body);
     }
 
-    static async getUserFromId(userId) {
+    static async getUserFromId(userId): Promise<any> {
         const response = await fetch('https://api.theta.tv/v1/user/' + userId);
         const json = await response.json();
         return json.body;

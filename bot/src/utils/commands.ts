@@ -40,6 +40,9 @@ export default class BabbleCMD {
             case msg[0] == "magic8":
                 Games.play8Ball(msg, usr, channel);
                 break;
+            case msg[0] == "twitter" || msg[0] == "twitch" || msg[0] == "youtube" || msg[0] == "discord":
+                this.SocialLinkHandler(msg, channel);
+                break;
             // case msg[0] == "timedmsg":
             //     ThetaApi.timedMsg(msg, channel);
             //     break;
@@ -126,6 +129,25 @@ export default class BabbleCMD {
             }
         } else {
             ThetaApi.sendMsg("Sorry but I did not recognize the Type of alert you would like to change you can use [all, hello, donation, follow, gift, sub, giftedsub, level, quiz, raffle, rafflewin]", channel);
+        }
+    }
+
+    static SocialLinkHandler(msg: any, channel: any) {
+        let channelConfig = BabbleAip.getChannelConfig(channel);
+        let streamer = ThetaApi.getUserFromId(channel);
+        switch (true) {
+            case msg[0] == "twitter" && (channelConfig.socialLinks.twitter != ''):
+                ThetaApi.sendMsg(`Hey Follow @${streamer['username']} on Twitter ${channelConfig.socialLinks.twitter}`, channel);
+                break;
+            case msg[0] == "twitch" && (channelConfig.socialLinks.twitch != ''):
+                ThetaApi.sendMsg(`Hey check out @${streamer['username']} on Twitch ${channelConfig.socialLinks.twitch}`, channel);
+                break;
+            case msg[0] == "youtube" && (channelConfig.socialLinks.youtube != ''):
+                ThetaApi.sendMsg(`Hey Follow @${streamer['username']} on YouTube at ${channelConfig.socialLinks.youtube}`, channel);
+                break;
+            case msg[0] == "discord" && (channelConfig.socialLinks.discord != ''):
+                ThetaApi.sendMsg(`Hey join @${streamer['username']} on Discord ${channelConfig.socialLinks.discord}`, channel);
+                break;
         }
     }
 }

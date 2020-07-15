@@ -21,7 +21,16 @@ in order to use this bot with theta you must make a config file. `/bot/config.js
     "clientId": "<clientId>",
     "clientSecret": "<clientId>",
     "defaultPrefix": "!",
-    "subscribers": []
+    "subscribers": [],
+    "twitchOpts": {
+      "identity": {
+        "username": <BOT_USERNAME>,
+        "password": <OAUTH_TOKEN>
+      },
+      "channels": [
+        <CHANNEL_NAME's here>
+      ]
+  }
 }
 ```
 you must add your db json files to the server `./db/[platform]` these files must be must named to match and inited with an empty object ie
