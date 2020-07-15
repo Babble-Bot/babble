@@ -134,19 +134,18 @@ export default class BabbleCMD {
 
     static SocialLinkHandler(msg: any, channel: any) {
         let channelConfig = BabbleAip.getChannelConfig(channel);
-        let streamer = ThetaApi.getUserFromId(channel);
         switch (true) {
             case msg[0] == "twitter" && (channelConfig.socialLinks.twitter != ''):
-                ThetaApi.sendMsg(`Hey Follow @${streamer['username']} on Twitter ${channelConfig.socialLinks.twitter}`, channel);
+                ThetaApi.sendMsg(`Hey follow me on Twitter ${channelConfig.socialLinks.twitter}`, channel);
                 break;
             case msg[0] == "twitch" && (channelConfig.socialLinks.twitch != ''):
-                ThetaApi.sendMsg(`Hey check out @${streamer['username']} on Twitch ${channelConfig.socialLinks.twitch}`, channel);
+                ThetaApi.sendMsg(`Hey you can also watch me on Twitch ${channelConfig.socialLinks.twitch}`, channel);
                 break;
             case msg[0] == "youtube" && (channelConfig.socialLinks.youtube != ''):
-                ThetaApi.sendMsg(`Hey Follow @${streamer['username']} on YouTube at ${channelConfig.socialLinks.youtube}`, channel);
+                ThetaApi.sendMsg(`Hey follow me on YouTube at ${channelConfig.socialLinks.youtube}`, channel);
                 break;
             case msg[0] == "discord" && (channelConfig.socialLinks.discord != ''):
-                ThetaApi.sendMsg(`Hey join @${streamer['username']} on Discord ${channelConfig.socialLinks.discord}`, channel);
+                ThetaApi.sendMsg(`Hey join me on Discord ${channelConfig.socialLinks.discord}`, channel);
                 break;
         }
     }
