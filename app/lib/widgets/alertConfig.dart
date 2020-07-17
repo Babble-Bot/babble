@@ -71,7 +71,7 @@ class _AlertConfigCard extends State<AlertConfigCard> {
           Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text("Follo:"),
+                Text("Follow:"),
                 Switch(
                   value: widget.config.follow,
                   onChanged: (bool value) => updateAlertConfig(value, "follow"),

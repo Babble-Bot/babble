@@ -33,6 +33,16 @@ type Channels struct {
 		Youtube string `json:"youtube"`
 		Discord string `json:"discord"`
 	} 				   `json:"socialLinks"`
+	BridgeConfig struct{
+		ThetaConfig struct{
+			Active string		`json:"active"`
+			ChannelId string 	`json:"channelId"`
+		}						`json:"thetaConfig"`
+		TwitchConfig struct{
+			Active string		`json:"active"`
+			ChannelId string 	`json:"channelId"`
+		}						`json:"twitchConfig"`
+	}							`json:"bridgeConfig"`
 }
 
 type NumberGameConfig struct {

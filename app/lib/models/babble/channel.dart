@@ -27,6 +27,7 @@ class Body {
   String botName;
   AlertConfig alertConfig;
   SocialLinks socialLinks;
+  BridgeConfig bridgeConfig;
 
   Body(
       {this.clientId,
@@ -35,7 +36,8 @@ class Body {
       this.prefix,
       this.botName,
       this.alertConfig,
-      this.socialLinks});
+      this.socialLinks,
+      this.bridgeConfig});
 
   Body.fromJson(Map<String, dynamic> json) {
     clientId = json['clientId'];
@@ -48,6 +50,9 @@ class Body {
         : null;
     socialLinks = json['socialLinks'] != null
         ? new SocialLinks.fromJson(json['socialLinks'])
+        : null;
+    bridgeConfig = json['bridgeConfig'] != null
+        ? new BridgeConfig.fromJson(json['bridgeConfig'])
         : null;
   }
 
@@ -63,6 +68,9 @@ class Body {
     }
     if (this.socialLinks != null) {
       data['socialLinks'] = this.socialLinks.toJson();
+    }
+    if (this.bridgeConfig != null) {
+      data['bridgeConfig'] = this.bridgeConfig.toJson();
     }
     return data;
   }
@@ -146,6 +154,72 @@ class SocialLinks {
     data['twitch'] = this.twitch;
     data['youtube'] = this.youtube;
     data['discord'] = this.discord;
+    return data;
+  }
+}
+
+class BridgeConfig {
+  ThetaConfig thetaConfig;
+  TwitchConfig twitchConfig;
+
+  BridgeConfig({this.thetaConfig, this.twitchConfig});
+
+  BridgeConfig.fromJson(Map<String, dynamic> json) {
+    thetaConfig = json['thetaConfig'] != null
+        ? new ThetaConfig.fromJson(json['thetaConfig'])
+        : null;
+    twitchConfig = json['twitchConfig'] != null
+        ? new TwitchConfig.fromJson(json['twitchConfig'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.thetaConfig != null) {
+      data['thetaConfig'] = this.thetaConfig.toJson();
+    }
+    if (this.twitchConfig != null) {
+      data['twitchConfig'] = this.twitchConfig.toJson();
+    }
+
+    return data;
+  }
+}
+
+class TwitchConfig {
+  bool active;
+  String channelId;
+
+  TwitchConfig({this.active, this.channelId});
+
+  TwitchConfig.fromJson(Map<String, dynamic> json) {
+    active = json['active'];
+    channelId = json['channelId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['active'] = this.active;
+    data['channelId'] = this.channelId;
+    return data;
+  }
+}
+
+class ThetaConfig {
+  bool active;
+  String channelId;
+
+  ThetaConfig({this.active, this.channelId});
+
+  ThetaConfig.fromJson(Map<String, dynamic> json) {
+    active = json['active'];
+    channelId = json['channelId'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['active'] = this.active;
+    data['channelId'] = this.channelId;
     return data;
   }
 }
