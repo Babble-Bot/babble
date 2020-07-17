@@ -128,12 +128,12 @@ export default class ThetaBot {
                         },
                         bridgeConfig: {
                             thetaConfig:{
-                                active: false,//((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active : false),
-                                channelId: item.user_id// ((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId : item.user_id)
+                                active: ((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active : false),
+                                channelId: ((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId : item.user_id)
                             },
                             twitchConfig:{
-                                active: false,//((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active : false),
-                                channelId: ""//((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId : "")
+                                active:((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active : false),
+                                channelId:((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId : "")
                             }
                         }
                     };
