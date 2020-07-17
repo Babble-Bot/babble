@@ -13,6 +13,7 @@ interface Channel {
     botName: string;
     alertConfig: AlertConfig;
     socialLinks: SocialLinks;
+    bridgeConfig: BridgeConfig;
 }
 
 interface NumberGame {
@@ -35,6 +36,20 @@ interface AlertConfig{
     quiz: boolean;
     raffle: boolean;
     rafflewin: boolean;
+}
+
+interface BridgeConfig{
+    thetaConfig: ThetaConfig;
+    twitchConfig: TwitchConfig;
+}
+interface TwitchConfig{
+    active: boolean,
+    channelId: string,
+}
+
+interface ThetaConfig{
+    active: boolean,
+    channelId: string,
 }
 
 interface SocialLinks{

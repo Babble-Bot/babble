@@ -66,6 +66,17 @@ export default class BabbleApi {
         });
     }
 
+    static updateBridgeConfig(platform:string, key: string, value: any, channelId: any) {
+        let rawData = fs.readFileSync(path.join(appDir,'../../../../db/theta/channels.json'));
+        let channelDb = JSON.parse(rawData.toString());
+        channelDb.channels.forEach((channel ,i) => {
+            if(channel.userId === channelId) {
+                channelDb.channels[i].bridgeConfig[platform][key] = value;
+                fs.writeFileSync(path.join(appDir, '../../../../db/theta/channels.json'), JSON.stringify(channelDb, null, 2));
+            }
+        });
+    }
+
     static updateNumGameChannelConfig(channelId: string, updatedNumberGameConfig: any) {
         let rawData = fs.readFileSync(path.join(appDir,'../../../../db/theta/activeNumberGames.json'));
         let NumberGames = JSON.parse(rawData.toString());

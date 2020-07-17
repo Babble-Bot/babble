@@ -3,6 +3,7 @@ import * as channelDb from '../../../db/theta/channels.json';
 import ThetaApi from './theta.api';
 import BabbleAip from './babble.api';
 import Games from '../games';
+import { config } from 'chai';
 
 export default class BabbleCMD {
 
@@ -26,7 +27,7 @@ export default class BabbleCMD {
                 ThetaApi.getUpTime(channel);
                 break;
             case msg[0] == "alert":
-                this.alertConfigManager(msg, channel);
+                this.alertConfigHandler(msg, channel);
                 break;
             case msg[0] == "streamkey":
                 ThetaApi.sendMsg("Want a Theta StreamKey; This is how: https://community.theta.tv/stream-keys/", channel);
@@ -43,11 +44,15 @@ export default class BabbleCMD {
             case msg[0] == "twitter" || msg[0] == "twitch" || msg[0] == "youtube" || msg[0] == "discord":
                 this.SocialLinkHandler(msg, channel);
                 break;
+            case msg[0] == "twitchbridge":
+                this.bridgeConfigHandler(msg, channel);
+                break;
             // case msg[0] == "timedmsg":
             //     ThetaApi.timedMsg(msg, channel);
             //     break;
         }
     }
+    
 
     static checkViewHooks(msg, usr, channel) {
         msg = msg.toLowerCase().substr(1).split(" ");
@@ -112,7 +117,7 @@ export default class BabbleCMD {
         }
     }
 
-    static alertConfigManager(msg, channel) {
+    static alertConfigHandler(msg, channel) {
         const channelConfig = BabbleAip.getChannelConfig(channel);
         const types = ["all", "hello", "donation", "follow", "gift", "sub", "giftedsub", "level", "quiz", "raffle", "rafflewin"];
         const type = msg[1];
@@ -129,6 +134,26 @@ export default class BabbleCMD {
             }
         } else {
             ThetaApi.sendMsg("Sorry but I did not recognize the Type of alert you would like to change you can use [all, hello, donation, follow, gift, sub, giftedsub, level, quiz, raffle, rafflewin]", channel);
+        }
+    }
+
+    static bridgeConfigHandler(msg, channel) {
+        const channelConfig = BabbleAip.getChannelConfig(channel);
+        if(msg.length > 2){
+            const type = msg[1];
+            const conf = msg[2];
+            if(type == "channelId"){
+                BabbleAip.updateBridgeConfig('twitchConfig', "channelId", conf, channel);
+            }else{
+                ThetaApi.sendMsg("Sorry that config is not found. Run !help for help", channel);
+            }
+        }else {
+            const conf = msg[1];
+            if(channelConfig.bridgeConfig.twitchConfig.channelId != ""){
+                ThetaApi.sendMsg("Please run !twitchbridge channelId <your channel Id> first.", channel);
+            }else{
+                BabbleAip.updateBridgeConfig('twitchConfig', "active", conf, channel);
+            }
         }
     }
 

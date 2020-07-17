@@ -4,7 +4,6 @@ import fetch from 'node-fetch';
 import BabbleAip from './babble.api';
 import Helpers from './helpers';
 import * as appConfig from '../config.json';
-import { promises } from 'dns';
 
 
 export default class ThetaApi {

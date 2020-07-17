@@ -100,6 +100,7 @@ export default class ThetaBot {
                             maxInt: 0
                         }
                     });
+                    //TODO: REFACTER so that we can do better null checks
                     let channel: Channel = {
                         clientId: item.client_id,
                         userId: item.user_id,
@@ -124,6 +125,16 @@ export default class ThetaBot {
                             twitch: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.twitch : ""),
                             youtube: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.youtube : ""),
                             discord: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.discord : ""),
+                        },
+                        bridgeConfig: {
+                            thetaConfig:{
+                                active: false,//((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active : false),
+                                channelId: item.user_id// ((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId : item.user_id)
+                            },
+                            twitchConfig:{
+                                active: false,//((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active : false),
+                                channelId: ""//((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId : "")
+                            }
                         }
                     };
                     channels.push(channel);
