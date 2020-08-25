@@ -43,6 +43,12 @@ type Channels struct {
 			ChannelId string 	`json:"channelId"`
 		}						`json:"twitchConfig"`
 	}							`json:"bridgeConfig"`
+	CustomCmds []Cmd			`json:"customCmds"`
+}
+
+type Cmd struct {
+	Name string					`json:"name"`
+	Message string 				`json:"message"`
 }
 
 type NumberGameConfig struct {

@@ -28,6 +28,7 @@ class Body {
   AlertConfig alertConfig;
   SocialLinks socialLinks;
   BridgeConfig bridgeConfig;
+  CustomeCmds customeCmds;
 
   Body(
       {this.clientId,
@@ -54,6 +55,9 @@ class Body {
     bridgeConfig = json['bridgeConfig'] != null
         ? new BridgeConfig.fromJson(json['bridgeConfig'])
         : null;
+    customeCmds = json['customeCmds'] != null
+        ? new CustomeCmds.fromJson(json['customeCmds'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -75,6 +79,8 @@ class Body {
     return data;
   }
 }
+
+class CustomeCmds {}
 
 class AlertConfig {
   bool all;

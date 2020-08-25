@@ -55,10 +55,13 @@ class MyHomePage extends StatelessWidget {
                     RaisedButton(
                       child: Text('Login With Theta'),
                       color: Colors.white,
-                      onPressed: () {
-                        launch(
-                            'https://www.theta.tv/account/grant-app?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&redirect_uri=http://babblechatbot.com/',
-                            forceSafariVC: false);
+                      onPressed: () async {
+                        String url =
+                            'https://www.theta.tv/account/grant-app?client_id=nrw8kbwfew3zbyedmyn26ybxu0ixpiue&redirect_uri=http://babblechatbot.com/';
+                        await launch(url,
+                            forceSafariVC: false,
+                            forceWebView: true,
+                            enableJavaScript: true);
                       },
                     ),
                   ],
