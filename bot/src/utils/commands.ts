@@ -4,12 +4,23 @@ import ThetaApi from './theta.api';
 import BabbleAip from './babble.api';
 import Games from '../games';
 import { config } from 'chai';
+import Helpers from './helpers';
 
+const babbleCmds = ["name", "prefix", "hello", "hi", "num", "number", "ng", "uptime", "alert", "streamkey", "patreon", "babble", "info", "help", "support", "magic8", "twitter", "twitch", "youtube", "discord", "twitchbridge", "addcmd", "rmcmd", "timedmsg"];
 export default class BabbleCMD {
 
     static runCmd(msg, usr, channel) {
         msg = msg.substr(1).split(" ");
         msg[0] = msg[0].toLowerCase();
+        const channelConfig = BabbleAip.getChannelConfig(channel);
+        let isCustomCmd;
+        let customCmdIndx;
+        channelConfig.customCmds.forEach((cmd, index) => {
+            if(msg[0] == cmd.name){
+                isCustomCmd = true;
+                customCmdIndx = index;
+            }
+        });
         switch (true) {
             case msg[0] == "name":
                 BabbleAip.updateBotName(msg, channel);
@@ -47,12 +58,21 @@ export default class BabbleCMD {
             case msg[0] == "twitchbridge":
                 this.bridgeConfigHandler(msg, channel);
                 break;
+            case msg[0] == "addcmd":
+                this.addCustomCmd(msg, channel);
+                break;
+            case msg[0] == "rmcmd":
+                this.removeCustomCmd(msg, channel);
+                break;
+            case isCustomCmd :
+                this.runCustomCmd(customCmdIndx, channel);
+                break;
             // case msg[0] == "timedmsg":
             //     ThetaApi.timedMsg(msg, channel);
             //     break;
         }
     }
-    
+
 
     static checkViewHooks(msg, usr, channel) {
         msg = msg.toLowerCase().substr(1).split(" ");
@@ -158,7 +178,7 @@ export default class BabbleCMD {
     }
 
     static SocialLinkHandler(msg: any, channel: any) {
-        let channelConfig = BabbleAip.getChannelConfig(channel);
+        const channelConfig = BabbleAip.getChannelConfig(channel);
         switch (true) {
             case msg[0] == "twitter" && (channelConfig.socialLinks.twitter != ''):
                 ThetaApi.sendMsg(`Hey follow me on Twitter ${channelConfig.socialLinks.twitter}`, channel);
@@ -173,5 +193,69 @@ export default class BabbleCMD {
                 ThetaApi.sendMsg(`Hey join me on Discord ${channelConfig.socialLinks.discord}`, channel);
                 break;
         }
+    }
+
+    static addCustomCmd(msg, channel){
+        const channelConfig = BabbleAip.getChannelConfig(channel);
+        let newCmdName = msg[1];
+        let cmdsList = [];
+        Helpers.removeItemOnce(msg, "!");
+        Helpers.removeItemOnce(msg, "addcmd");
+        Helpers.removeItemOnce(msg, newCmdName.toString());
+        msg = msg.toString().split(",").join(" ");
+        channelConfig.customCmds.forEach((cmd) => {
+            cmdsList.push(cmd.name);
+        });
+        switch(true){
+            case babbleCmds.includes(newCmdName):
+                ThetaApi.sendMsg("Sorry command name is reserved.", channel);
+                break;
+            case cmdsList.includes(newCmdName):
+                ThetaApi.sendMsg("You have already added a command with the same name.",channel);
+                break;
+            default:
+                let newCmd = {
+                    name: newCmdName,
+                    message: msg
+                };
+                channelConfig.customCmds.push(newCmd);
+                BabbleAip.updateChannelConfig(channelConfig, channel);
+                ThetaApi.sendMsg("Your new command can be used by typing '" + channelConfig.prefix + newCmdName + "' and I will respond with '" + msg + "' when ever your new command is used" , channel);
+                break;
+        }
+    }
+
+    static removeCustomCmd(msg,  channel){
+        const cmdToRemove = msg[1];
+        const channelConfig = BabbleAip.getChannelConfig(channel);
+        let cmdsList = [];
+        let cmdIndex;
+        channelConfig.customCmds.forEach((cmd, index) => {
+            cmdsList.push(cmd.name);
+            if(cmd.name == cmdToRemove){
+                cmdIndex = index;
+            }
+        });
+        switch(true){
+            case babbleCmds.includes(cmdToRemove):
+                ThetaApi.sendMsg("Sorry command name is reserved.", channel);
+                break;
+            case !cmdsList.includes(cmdToRemove):
+                ThetaApi.sendMsg("Sorry command not found.",channel);
+                break;
+            case cmdsList.includes(cmdToRemove):
+                if (cmdIndex > -1) {
+                    channelConfig.customCmds.splice(cmdIndex, 1);
+                    BabbleAip.updateChannelConfig(channelConfig, channel);
+                    ThetaApi.sendMsg(cmdToRemove + " has been removed." , channel);
+                }
+                break;
+        }
+    }
+
+    static runCustomCmd(customCmdIndx: any, channel: any) {
+        const channelConfig = BabbleAip.getChannelConfig(channel);
+        let msg = channelConfig.customCmds[customCmdIndx].message;
+        ThetaApi.sendMsg(msg, channel);
     }
 }

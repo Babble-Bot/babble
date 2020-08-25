@@ -27,7 +27,7 @@ export default class BabbleApi {
         });
         return numberGameConfig;
     }
-    
+
     static updateChannelsDB(channels: any) {
         let rawData = fs.readFileSync(path.join(appDir,'../../../../db/theta/channels.json'));
         let channelDb = JSON.parse(rawData.toString());
@@ -61,6 +61,17 @@ export default class BabbleApi {
         channelDb.channels.forEach((channel ,i) => {
             if(channel.userId === channelId) {
                 channelDb.channels[i].botName = msg[1];
+                fs.writeFileSync(path.join(appDir, '../../../../db/theta/channels.json'), JSON.stringify(channelDb, null, 2));
+            }
+        });
+    }
+
+    static updateChannelConfig(channelConfig: Channel, channelId: any) {
+        let rawData = fs.readFileSync(path.join(appDir,'../../../../db/theta/channels.json'));
+        let channelDb = JSON.parse(rawData.toString());
+        channelDb.channels.forEach((channel ,i) => {
+            if(channel.userId === channelId) {
+                channelDb.channels[i] = channelConfig;
                 fs.writeFileSync(path.join(appDir, '../../../../db/theta/channels.json'), JSON.stringify(channelDb, null, 2));
             }
         });

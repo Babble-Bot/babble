@@ -14,6 +14,7 @@ interface Channel {
     alertConfig: AlertConfig;
     socialLinks: SocialLinks;
     bridgeConfig: BridgeConfig;
+    customCmds: Cmd[];
 }
 
 interface NumberGame {
@@ -57,6 +58,11 @@ interface SocialLinks{
     twitch: string;
     youtube: string;
     discord: string;
+}
+
+interface Cmd {
+    name: string,
+    message: string
 }
 
 interface TimedMessage{

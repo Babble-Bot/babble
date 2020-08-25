@@ -126,16 +126,17 @@ export default class ThetaBot {
                             youtube: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.youtube : ""),
                             discord: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.discord : ""),
                         },
-                        bridgeConfig: {
+                        bridgeConfig: ((BabbleAip.getChannelConfig(item.user_id) && BabbleAip.getChannelConfig(item.user_id).bridgeConfig != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig : {
                             thetaConfig:{
-                                active: ((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.active : false),
-                                channelId: ((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.thetaConfig.channelId : item.user_id)
+                                active: false,
+                                channelId: item.user_id
                             },
                             twitchConfig:{
-                                active:((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.active : false),
-                                channelId:((BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig.twitchConfig.channelId : "")
+                                active: false,
+                                channelId: ""
                             }
-                        }
+                        }),
+                        customCmds: ((BabbleAip.getChannelConfig(item.user_id) && BabbleAip.getChannelConfig(item.user_id).customCmds != undefined) ? BabbleAip.getChannelConfig(item.user_id).customCmds : [])
                     };
                     channels.push(channel);
                     numberGames.push(activeNumberGame);
