@@ -28,7 +28,11 @@ class _SocialLinksCard extends State<SocialLinksCard> {
     'twitter': "",
     'twitch': "",
     'youtube': "",
-    'discord': ""
+    'discord': "",
+    'instagram': "",
+    'facebook': "",
+    'snapchat': "",
+    'tiktok': ""
   };
 
   @override
@@ -38,6 +42,10 @@ class _SocialLinksCard extends State<SocialLinksCard> {
     formData['twitch'] = widget.config.twitch;
     formData['youtube'] = widget.config.youtube;
     formData['discord'] = widget.config.discord;
+    formData['instagram'] = widget.config.instagram;
+    formData['facebook'] = widget.config.facebook;
+    formData['snapchat'] = widget.config.snapchat;
+    formData['tiktok'] = widget.config.tiktok;
   }
 
   Future<void> updateSocialLinks() async {
@@ -46,6 +54,10 @@ class _SocialLinksCard extends State<SocialLinksCard> {
     widget.channel.body.socialLinks.twitch = formData['twitch'];
     widget.channel.body.socialLinks.youtube = formData['youtube'];
     widget.channel.body.socialLinks.discord = formData['discord'];
+    widget.channel.body.socialLinks.instagram = formData['instagram'];
+    widget.channel.body.socialLinks.facebook = formData['facebook'];
+    widget.channel.body.socialLinks.snapchat = formData['snapchat'];
+    widget.channel.body.socialLinks.tiktok = formData['tiktok'];
     widget.channel = await babbleAip.updateChannel(widget.channel);
     setState(() {
       widget.config = widget.channel.body.socialLinks;
@@ -70,6 +82,10 @@ class _SocialLinksCard extends State<SocialLinksCard> {
                   _twitchInput(),
                   _youtubeInput(),
                   _discordInput(),
+                  _instagramInput(),
+                  _facebookInput(),
+                  _snapchatInput(),
+                  _tiktokInput(),
                   _submitButton(),
                 ]),
           ),
@@ -123,6 +139,55 @@ class _SocialLinksCard extends State<SocialLinksCard> {
               labelText: 'Discord',
               hintText: widget.config.discord),
           onSaved: (val) => setState(() => formData['discord'] = val),
+        ));
+  }
+
+  Widget _instagramInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: FaIcon(FontAwesomeIcons.instagram,
+                  color: Color.fromARGB(255, 0, 0, 0)),
+              labelText: 'Instagram',
+              hintText: widget.config.instagram),
+          onSaved: (val) => setState(() => formData['instagram'] = val),
+        ));
+  }
+
+  Widget _facebookInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: FaIcon(FontAwesomeIcons.facebook,
+                  color: Color.fromARGB(255, 67, 96, 156)),
+              labelText: 'Facebook',
+              hintText: widget.config.facebook),
+          onSaved: (val) => setState(() => formData['facebook'] = val),
+        ));
+  }
+
+  Widget _snapchatInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              icon: FaIcon(FontAwesomeIcons.snapchat,
+                  color: Color.fromARGB(255, 255, 252, 0)),
+              labelText: 'Snapchat',
+              hintText: widget.config.snapchat),
+          onSaved: (val) => setState(() => formData['snapchat'] = val),
+        ));
+  }
+
+  Widget _tiktokInput() {
+    return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+              labelText: 'TikTok', hintText: widget.config.tiktok),
+          onSaved: (val) => setState(() => formData['tiktok'] = val),
         ));
   }
 

@@ -28,7 +28,7 @@ class Body {
   AlertConfig alertConfig;
   SocialLinks socialLinks;
   BridgeConfig bridgeConfig;
-  CustomeCmds customeCmds;
+  List<CustomCmds> customCmds;
 
   Body(
       {this.clientId,
@@ -38,7 +38,8 @@ class Body {
       this.botName,
       this.alertConfig,
       this.socialLinks,
-      this.bridgeConfig});
+      this.bridgeConfig,
+      this.customCmds});
 
   Body.fromJson(Map<String, dynamic> json) {
     clientId = json['clientId'];
@@ -55,9 +56,12 @@ class Body {
     bridgeConfig = json['bridgeConfig'] != null
         ? new BridgeConfig.fromJson(json['bridgeConfig'])
         : null;
-    customeCmds = json['customeCmds'] != null
-        ? new CustomeCmds.fromJson(json['customeCmds'])
-        : null;
+    if (json['customCmds'] != null) {
+      customCmds = new List<CustomCmds>();
+      json['customCmds'].forEach((v) {
+        customCmds.add(new CustomCmds.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -76,11 +80,12 @@ class Body {
     if (this.bridgeConfig != null) {
       data['bridgeConfig'] = this.bridgeConfig.toJson();
     }
+    if (this.customCmds != null) {
+      data['customCmds'] = this.customCmds.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
-
-class CustomeCmds {}
 
 class AlertConfig {
   bool all;
@@ -144,14 +149,30 @@ class SocialLinks {
   String twitch;
   String youtube;
   String discord;
+  String instagram;
+  String facebook;
+  String snapchat;
+  String tiktok;
 
-  SocialLinks({this.twitter, this.twitch, this.youtube, this.discord});
+  SocialLinks(
+      {this.twitter,
+      this.twitch,
+      this.youtube,
+      this.discord,
+      this.instagram,
+      this.facebook,
+      this.snapchat,
+      this.tiktok});
 
   SocialLinks.fromJson(Map<String, dynamic> json) {
     twitter = json['twitter'];
     twitch = json['twitch'];
     youtube = json['youtube'];
     discord = json['discord'];
+    instagram = json['instagram'];
+    facebook = json['facebook'];
+    snapchat = json['snapchat'];
+    tiktok = json['tiktok'];
   }
 
   Map<String, dynamic> toJson() {
@@ -160,13 +181,17 @@ class SocialLinks {
     data['twitch'] = this.twitch;
     data['youtube'] = this.youtube;
     data['discord'] = this.discord;
+    data['instagram'] = this.instagram;
+    data['facebook'] = this.facebook;
+    data['snapchat'] = this.snapchat;
+    data['tiktok'] = this.tiktok;
     return data;
   }
 }
 
 class BridgeConfig {
   ThetaConfig thetaConfig;
-  TwitchConfig twitchConfig;
+  ThetaConfig twitchConfig;
 
   BridgeConfig({this.thetaConfig, this.twitchConfig});
 
@@ -175,7 +200,7 @@ class BridgeConfig {
         ? new ThetaConfig.fromJson(json['thetaConfig'])
         : null;
     twitchConfig = json['twitchConfig'] != null
-        ? new TwitchConfig.fromJson(json['twitchConfig'])
+        ? new ThetaConfig.fromJson(json['twitchConfig'])
         : null;
   }
 
@@ -187,32 +212,12 @@ class BridgeConfig {
     if (this.twitchConfig != null) {
       data['twitchConfig'] = this.twitchConfig.toJson();
     }
-
-    return data;
-  }
-}
-
-class TwitchConfig {
-  bool active;
-  String channelId;
-
-  TwitchConfig({this.active, this.channelId});
-
-  TwitchConfig.fromJson(Map<String, dynamic> json) {
-    active = json['active'];
-    channelId = json['channelId'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['active'] = this.active;
-    data['channelId'] = this.channelId;
     return data;
   }
 }
 
 class ThetaConfig {
-  bool active;
+  String active;
   String channelId;
 
   ThetaConfig({this.active, this.channelId});
@@ -226,6 +231,25 @@ class ThetaConfig {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['active'] = this.active;
     data['channelId'] = this.channelId;
+    return data;
+  }
+}
+
+class CustomCmds {
+  String name;
+  String message;
+
+  CustomCmds({this.name, this.message});
+
+  CustomCmds.fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    message = json['message'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.name;
+    data['message'] = this.message;
     return data;
   }
 }
