@@ -32,6 +32,10 @@ type Channels struct {
 		Twitch  string `json:"twitch"`
 		Youtube string `json:"youtube"`
 		Discord string `json:"discord"`
+		Instagram string `json:"instagram"`
+		Facebook string `json:"facebook"`
+		Snapchat string `json:"snapchat"`
+		Tiktok string `json:"tiktok"`
 	} 				   `json:"socialLinks"`
 	BridgeConfig struct{
 		ThetaConfig struct{

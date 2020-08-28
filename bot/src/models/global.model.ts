@@ -58,6 +58,10 @@ interface SocialLinks{
     twitch: string;
     youtube: string;
     discord: string;
+    instagram: string;
+    facebook: string;
+    snapchat: string;
+    tiktok: string
 }
 
 interface Cmd {

@@ -125,6 +125,10 @@ export default class ThetaBot {
                             twitch: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.twitch : ""),
                             youtube: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.youtube : ""),
                             discord: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.discord : ""),
+                            instagram: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.instagram : ""),
+                            facebook: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.facebook : ""),
+                            snapchat: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.snapchat : ""),
+                            tiktok: (BabbleAip.getChannelConfig(item.user_id) ? BabbleAip.getChannelConfig(item.user_id).socialLinks.tiktok : "")
                         },
                         bridgeConfig: ((BabbleAip.getChannelConfig(item.user_id) && BabbleAip.getChannelConfig(item.user_id).bridgeConfig != undefined) ? BabbleAip.getChannelConfig(item.user_id).bridgeConfig : {
                             thetaConfig:{

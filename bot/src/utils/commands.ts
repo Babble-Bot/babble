@@ -52,7 +52,7 @@ export default class BabbleCMD {
             case msg[0] == "magic8":
                 Games.play8Ball(msg, usr, channel);
                 break;
-            case msg[0] == "twitter" || msg[0] == "twitch" || msg[0] == "youtube" || msg[0] == "discord":
+            case msg[0] == "twitter" || msg[0] == "twitch" || msg[0] == "youtube" || msg[0] == "discord" || msg[0] == "instagram" || msg[0] == "facebook" || msg[0] == "snapchat" || msg[0] == "tiktok" :
                 this.SocialLinkHandler(msg, channel);
                 break;
             case msg[0] == "twitchbridge":
@@ -191,6 +191,18 @@ export default class BabbleCMD {
                 break;
             case msg[0] == "discord" && (channelConfig.socialLinks.discord != ''):
                 ThetaApi.sendMsg(`Hey join me on Discord ${channelConfig.socialLinks.discord}`, channel);
+                break;
+            case msg[0] == "instagram" && (channelConfig.socialLinks.instagram != ''):
+                ThetaApi.sendMsg(`Hey join me on Instagram ${channelConfig.socialLinks.instagram}`, channel);
+                break;
+            case msg[0] == "facebook" && (channelConfig.socialLinks.facebook != ''):
+                ThetaApi.sendMsg(`Hey join me on Facebook ${channelConfig.socialLinks.facebook}`, channel);
+                break;
+            case msg[0] == "snapchat" && (channelConfig.socialLinks.snapchat != ''):
+                ThetaApi.sendMsg(`Hey join me on Snapchat ${channelConfig.socialLinks.snapchat}`, channel);
+                break;
+            case msg[0] == "tiktok" && (channelConfig.socialLinks.tiktok != ''):
+                ThetaApi.sendMsg(`Hey join me on TikTok ${channelConfig.socialLinks.tiktok}`, channel);
                 break;
         }
     }
