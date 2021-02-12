@@ -14,13 +14,24 @@ export default class Games {
         switch(msg[1]){
             case "kill":
                 ngChannelConfig = {channelId:channel, active: false, winningNumber: 0, players: [], lastGame: ngChannelConfig.lastGame};
-                BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
-                ThetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
+                if(ngChannelConfig.winningNumber !== null && ngChannelConfig.lastGame.maxInt !== null){
+                    BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
+                    ThetaApi.sendMsg("The Number Game has been cancelled :burnttoast:", channel);
+                }
+                else{
+                    ThetaApi.sendMsg("Somthing went Wrang Please Try Again", channel);
+                }
                 break;
             case "repeat":
                 ngChannelConfig.winningNumber = Math.floor(Math.random() * ngChannelConfig.lastGame.maxInt) + 1;
-                BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
-                ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + ngChannelConfig.lastGame.maxInt, channel);
+                if(ngChannelConfig.winningNumber !== null && ngChannelConfig.lastGame.maxInt !== null){
+                    BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
+                    ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + ngChannelConfig.lastGame.maxInt, channel);
+                }
+                else{
+                    ThetaApi.sendMsg("Somthing went Wrang Please Try Again", channel);
+                }
+                
                 break;
             default:
                 if (msg[1]) {
@@ -33,8 +44,13 @@ export default class Games {
                     ngChannelConfig.active = true;
                     ngChannelConfig.winningNumber = Math.floor(Math.random() * maxInt) + 1;
                     ngChannelConfig.lastGame = {maxInt: maxInt};
-                    BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
-                    ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
+                    if(ngChannelConfig.winningNumber !== null && ngChannelConfig.lastGame.maxInt !== null){
+                        BabbleAip.updateNumGameChannelConfig(channel, ngChannelConfig);
+                        ThetaApi.sendMsg("Number Game Started :toastgrin: pick a number between 1 and " + maxInt, channel);
+                    }
+                    else{
+                        ThetaApi.sendMsg("Somthing went Wrang Please Try Again", channel);
+                    }
                 }else{
                     ThetaApi.sendMsg("Number Game already active", channel);
                 }
@@ -70,6 +86,7 @@ export default class Games {
         }
 
     }
+
     static getNgPlayer(ngChannelConfig: NumberGame, usr: any, guess: number) {
         let playerIndex:number = this.getNgPlayerIndex(usr.id, ngChannelConfig);
         const playerDefault = {
