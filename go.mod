@@ -4,8 +4,7 @@ go 1.14
 
 require (
 	github.com/gin-gonic/contrib v0.0.0-20200810162008-6dee08bf958e
-	github.com/gin-gonic/gin v1.6.3
-	github.com/go-playground/validator/v10 v10.3.0 // indirect
+	github.com/gin-gonic/gin v1.7.7
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/google/go-cmp v0.5.2 // indirect
 	github.com/json-iterator/go v1.1.10 // indirect
